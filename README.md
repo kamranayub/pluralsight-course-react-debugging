@@ -1,6 +1,6 @@
-# {$COURSE_NAME$ Pluralsight Course
+# React 18 Debugging Playbook Pluralsight Course
 
-This repository is for the Pluralsight course **[$COURSE_NAME$]($COURSE_LINK$)**. The license is Apache 2.0.
+This repository is for the Pluralsight course **[React 18 Debugging Playbook]($COURSE_LINK$)**. The license is Apache 2.0.
 
 [![Course overview screenshot]($COURSE_HERO_IMAGE$)]($COURSE_LINK$)
 
@@ -19,7 +19,7 @@ Please report course issues using the [Issues](issues) page or the Pluralsight d
 
 ## Updates
 
-- **$RELEASE_DATE$**
+- **Jan 2023**
   - Initial release 🎉
 
 ## Additional Resources
