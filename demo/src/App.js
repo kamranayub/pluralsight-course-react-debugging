@@ -1,11 +1,12 @@
 import React from "react";
-import { Anchor, Grommet, PageContent, Footer, Text } from "grommet";
+import { Anchor, Grommet, Page, PageContent, Footer, Text } from "grommet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import AppHeader from "./components/AppHeader";
+import HomePage from "./Home";
 import { Router, Routes, Route } from "./Router";
 import { BugNet } from "./BugNet";
 
-import HomePage from "./Home";
 import { allBugs } from "./all-bugs";
 
 import "./App.css";
@@ -39,35 +40,38 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <BugNet>
         <Router>
-          <Routes>
-            <Route path="/" Component={HomePage} />
-            {allBugs.map((bug) => (
-              <Route
-                key={bug.name}
-                path={bug.route}
-                Component={bug.component}
-              />
-            ))}
-          </Routes>
+          <Page>
+            <PageContent>
+              <AppHeader />
+              <Routes>
+                <Route path="/" Component={HomePage} />
+                {allBugs.map((bug) => (
+                  <Route
+                    key={bug.name}
+                    path={bug.route}
+                    Component={bug.component}
+                  />
+                ))}
+              </Routes>
+              <Footer
+                align="center"
+                direction="row"
+                flex={false}
+                justify="center"
+                gap="medium"
+                pad="large"
+              >
+                <Text>
+                  a demo app created by Kamran Ayub for the{" "}
+                  <Anchor href="https://bit.ly/PSReactDebugging">
+                    React Debugging Playbook
+                  </Anchor>{" "}
+                  Pluralsight course
+                </Text>
+              </Footer>
+            </PageContent>
+          </Page>
         </Router>
-        <PageContent>
-          <Footer
-            align="center"
-            direction="row"
-            flex={false}
-            justify="center"
-            gap="medium"
-            pad="large"
-          >
-            <Text>
-              a demo app created by Kamran Ayub for the{" "}
-              <Anchor href="https://bit.ly/PSReactDebugging">
-                React Debugging Playbook
-              </Anchor>{" "}
-              Pluralsight course
-            </Text>
-          </Footer>
-        </PageContent>
       </BugNet>
     </QueryClientProvider>
   </Grommet>
