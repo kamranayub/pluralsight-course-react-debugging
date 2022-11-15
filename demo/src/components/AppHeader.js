@@ -25,7 +25,7 @@ const AppHeader = () => {
   const { data: store } = useQuery({
     queryKey: "store",
     queryFn: getLocation,
-    select: (data) => data?.city ?? 'pick a store',
+    select: (data) => `${data?.city}, ${data?.regionCode}` ?? "pick a store",
     initialData: { city: "pick a store" },
   });
 
