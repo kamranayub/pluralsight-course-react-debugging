@@ -23,7 +23,7 @@ const AppHeader = () => {
   const { count } = useBugNet();
 
   const { data: store } = useQuery({
-    queryKey: "store",
+    queryKey: ["store"],
     queryFn: getLocation,
     select: (data) =>
       data ? `${data.city}, ${data.regionCode}` : "pick a store",
