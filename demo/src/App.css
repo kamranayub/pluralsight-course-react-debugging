@@ -1,0 +1,10 @@
+.pageHeader-bees {
+  background-image: url(../public/bees.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right top;
+}
+
+.pageHeader-bees--light {
+  background-image: url(../public/bees-light.png);
+}
