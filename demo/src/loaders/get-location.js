@@ -1,3 +1,9 @@
 export async function getLocation() {
-  return fetch("/api/location");
+  const res = await fetch("/api/location");
+
+  if (res.ok) {
+    return await res.json();
+  }
+
+  throw new Error("Could not fetch location from edge server");
 }
