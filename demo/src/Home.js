@@ -12,6 +12,7 @@ import {
   CardBody,
   Paragraph,
   CardFooter,
+  ResponsiveContext,
 } from "grommet";
 import { Bug, Search } from "grommet-icons";
 
@@ -20,6 +21,8 @@ import { useRouter } from "./Router";
 import { allBugs } from "./all-bugs";
 
 const Index = () => {
+  const size = React.useContext(ResponsiveContext);
+
   return (
     <Main>
       <Box
@@ -39,7 +42,7 @@ const Index = () => {
         <Button label="view bug of the month" primary />
       </Box>
       <Heading>shop all bugs</Heading>
-      <Grid columns="1/3" gap="small">
+      <Grid columns={size !== "small" ? "1/3" : "full"} gap="small">
         {allBugs.map((bug) => (
           <BugCard
             key={bug.name}

@@ -1,8 +1,9 @@
 .pageHeader-bees {
-  background-image: url(../public/bees.png);
+  background-image: url(../public/bees-alpha.png);
   background-repeat: no-repeat;
-  background-size: contain;
-  background-position: right top;
+  background-size: auto 380px;
+  background-position: left 100% top;
+  background-blend-mode: luminosity;
 }
 
 .pageHeader-bees--light {

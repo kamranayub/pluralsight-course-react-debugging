@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   Nav,
+  ResponsiveContext,
 } from "grommet";
 import { FormSearch, FormClose, Location, Cart, Bug } from "grommet-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +20,7 @@ import { allBugs } from "../all-bugs";
 import { getLocation } from "../loaders/get-location";
 
 const AppHeader = () => {
+  const size = React.useContext(ResponsiveContext);
   const { push } = useRouter();
   const { count } = useBugNet();
 
@@ -55,9 +57,11 @@ const AppHeader = () => {
           hoverIndicator
           onClick={() => push("/")}
           label={
-            <Text size="large" weight="bold">
-              react bug emporium
-            </Text>
+            size !== "small" ? (
+              <Text size="large" weight="bold">
+                react bug emporium
+              </Text>
+            ) : null
           }
           plain
         />
@@ -80,7 +84,7 @@ const AppHeader = () => {
         </Box>
         <Nav align="center" flex="grow" direction="row" justify="end">
           <Button
-            label={store}
+            label={size !== "small" ? store : null}
             plain
             icon={<Location />}
             primary={false}
