@@ -22,6 +22,7 @@ export const bug = {
   price: "$22.99",
   route: "/bug/strict-mode",
   component: Bug,
+  order: 7
 };
 
 export default Bug;

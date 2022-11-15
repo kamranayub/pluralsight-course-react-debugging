@@ -22,6 +22,7 @@ export const bug = {
   price: "$23.99",
   route: "/bug/state",
   component: Bug,
+  order: 2
 };
 
 export default Bug;

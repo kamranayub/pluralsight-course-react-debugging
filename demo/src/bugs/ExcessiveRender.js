@@ -22,6 +22,7 @@ export const bug = {
   price: "$1099.99",
   route: "/bug/excessive",
   component: Bug,
+  order: 4
 };
 
 export default Bug;

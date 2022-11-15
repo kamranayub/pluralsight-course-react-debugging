@@ -22,6 +22,7 @@ export const bug = {
   price: "$11.99",
   route: "/bug/cascading",
   component: Bug,
+  order: 5
 };
 
 export default Bug;
