@@ -9,15 +9,25 @@ import {
   TextInput,
   Nav,
 } from "grommet";
-import { FormSearch, FormClose, User, Cart, Bug } from "grommet-icons";
+import { FormSearch, FormClose, Location, Cart, Bug } from "grommet-icons";
+import { useQuery } from "@tanstack/react-query";
 
 import { useRouter } from "../Router";
 import { useBugNet } from "../BugNet";
 import { allBugs } from "../all-bugs";
 
+import { getLocation } from "../loaders/get-location";
+
 const AppHeader = () => {
   const { push } = useRouter();
   const { count } = useBugNet();
+
+  const { data: store } = useQuery({
+    queryKey: "store",
+    queryFn: getLocation,
+    select: (data) => data?.city ?? 'pick a store',
+    initialData: { city: "pick a store" },
+  });
 
   const goToBug = React.useCallback(
     (e) => {
@@ -70,9 +80,9 @@ const AppHeader = () => {
         </Box>
         <Nav align="center" flex="grow" direction="row" justify="end">
           <Button
-            label="account"
+            label={store}
             plain
-            icon={<User />}
+            icon={<Location />}
             primary={false}
             active={false}
           />
