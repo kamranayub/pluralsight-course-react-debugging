@@ -62,7 +62,11 @@ const App = () => (
                 pad="large"
               >
                 <Text>
-                  a demo app created by Kamran Ayub for the{" "}
+                  a demo app created by{" "}
+                  <Anchor href="https://kamranayub.com?ref=ps-react-debugging-demo">
+                    Kamran Ayub
+                  </Anchor>{" "}
+                  for the{" "}
                   <Anchor href="https://bit.ly/PSReactDebugging">
                     React Debugging Playbook
                   </Anchor>{" "}
