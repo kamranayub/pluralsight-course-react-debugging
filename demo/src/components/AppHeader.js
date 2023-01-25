@@ -27,6 +27,7 @@ const AppHeader = () => {
   const { data: store } = useQuery({
     queryKey: ["store"],
     queryFn: getLocation,
+    enabled: process.env.NODE_ENV !== "development",
     select: (data) =>
       data ? `${data.city}, ${data.regionCode}` : "pick a store",
   });
