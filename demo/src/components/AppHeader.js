@@ -67,21 +67,14 @@ const AppHeader = () => {
           plain
         />
         <Box
+          key="Search"
           align="center"
           justify="center"
           flex="grow"
           gap="none"
           margin={{ left: "medium" }}
         >
-          <TextInput
-            icon={<FormSearch />}
-            placeholder="find a bug buddy..."
-            suggestions={allBugs.map((b) => ({
-              label: `${b.title} (${b.name})`,
-              value: b,
-            }))}
-            onSuggestionSelect={goToBug}
-          />
+          <MemoSearchInput suggestions={allBugs} onSuggestionSelect={goToBug} />
         </Box>
         <Nav align="center" flex="grow" direction="row" justify="end">
           <Button
@@ -107,6 +100,27 @@ const AppHeader = () => {
     </>
   );
 };
+
+/**
+ * @note This isn't really needed but is here to demonstrate a Memo
+ * tag in the Dev Tools.
+ */
+const MemoSearchInput = React.memo(({ suggestions, ...props }) => {
+  const mapped = suggestions.map((b) => ({
+    label: `${b.title} (${b.name})`,
+    value: b,
+  }));
+
+  return (
+    <TextInput
+      {...props}
+      icon={<FormSearch />}
+      placeholder="find a bug buddy..."
+      suggestions={mapped}
+    />
+  );
+});
+MemoSearchInput.displayName = "MemoSearchInput";
 
 const BugDrawer = ({ show, onClose }) => {
   const { caught } = useBugNet();
