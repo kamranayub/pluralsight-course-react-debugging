@@ -7,19 +7,27 @@ import CatchBugButton from "./CatchBugButton";
 const Bug = () => {
   return (
     <Template bug={bug}>
-      <PrayingMantis />
+      <PrayingMantis price="" />
     </Template>
   );
 };
 
-const PrayingMantis = () => {
+const PrayingMantis = ({ price }) => {
   const [found, setFound] = useState(false);
 
-  return found ? (
-    <CatchBugButton bug={bug} />
-  ) : (
-    <Text color="text-xweak">the {bug.name} is hiding...</Text>
-  );
+  if (!found) {
+    return (<Text color="text-xweak">the {bug.name} is hiding...</Text>);
+  }
+
+  if (!price) {
+    return (<Text color="text-xweak">the {bug.name} is priceless and can't be bought...</Text>);
+  }
+
+  if (price !== bug.price) {
+    return (<Text color="text-xweak">the {bug.name} laughs at your asking price...</Text>);
+  }
+
+  return <CatchBugButton bug={{...bug, price }} />;
 };
 
 export const bug = {
