@@ -22,7 +22,6 @@ import { getLocation } from "../loaders/get-location";
 const AppHeader = () => {
   const size = React.useContext(ResponsiveContext);
   const { push } = useRouter();
-  const { count } = useBugNet();
 
   const { data: store } = useQuery({
     queryKey: ["store"],
@@ -39,8 +38,6 @@ const AppHeader = () => {
     },
     [push]
   );
-
-  const [isBugDrawerOpen, setIsBugDrawerOpen] = React.useState(false);
 
   return (
     <>
@@ -84,15 +81,26 @@ const AppHeader = () => {
             primary={false}
             active={false}
           />
-          <Button
-            label="bug net"
-            icon={<Cart />}
-            type="button"
-            badge={count}
-            onClick={() => setIsBugDrawerOpen(true)}
-          />
+          <CartButton />
         </Nav>
       </Header>
+    </>
+  );
+};
+
+const CartButton = () => {
+  const { count } = useBugNet();
+  const [isBugDrawerOpen, setIsBugDrawerOpen] = React.useState(false);
+
+  return (
+    <>
+      <Button
+        label="bug net"
+        icon={<Cart />}
+        type="button"
+        badge={count}
+        onClick={() => setIsBugDrawerOpen(true)}
+      />
       <BugDrawer
         show={isBugDrawerOpen}
         onClose={() => setIsBugDrawerOpen(false)}
@@ -105,7 +113,10 @@ const AppHeader = () => {
  * @note This isn't really needed but is here to demonstrate a Memo
  * tag in the Dev Tools.
  */
-const MemoSearchInput = React.memo(({ suggestions, ...props }) => {
+const MemoSearchInput = React.memo(function SearchInput({
+  suggestions,
+  ...props
+}) {
   const mapped = suggestions.map((b) => ({
     label: `${b.title} (${b.name})`,
     value: b,
