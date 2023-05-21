@@ -10,7 +10,7 @@
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       },
-      "preLaunchTask": "npm: start",
+      // "preLaunchTask": "npm: start",
       // Optional: close npm:start (will restart server every time)
       // "postDebugTask": "Terminate All Tasks"
     }
