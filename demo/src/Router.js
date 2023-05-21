@@ -7,7 +7,7 @@ export function useRouter() {
 }
 
 export const Router = ({ children }) => {
-  const [path, setPath] = React.useState("/");
+  const [path, setPath] = React.useState(document.location.pathname);
 
   React.useEffect(() => {
     const onPopState = () => setPath(document.location.pathname);
