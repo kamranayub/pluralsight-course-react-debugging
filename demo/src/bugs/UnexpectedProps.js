@@ -1,22 +1,70 @@
-import { useState } from "react";
-import { Text, Box } from "grommet";
+import { useState, useEffect, useRef } from "react";
+import { Heading, Text, Box } from "grommet";
 import { Star, StarHalf } from "grommet-icons";
+import { expect, use } from "chai";
+import chaiDOM from "chai-dom";
 
 import Template from "./BugPageTemplate";
-import CatchBugButton from "./CatchBugButton";
+
+use(chaiDOM);
 
 const Bug = () => {
+  const containerRef = useRef();
+  const isTrendingTest = useBugTest("should be trending", () => {
+    const isTrending = containerRef.current.querySelector(
+      '[data-test="popularity"]'
+    );
+    // eslint-disable-next-line
+    expect(isTrending).not.to.be.null;
+    expect(isTrending).to.have.text("Trending");
+  });
+  const hasRatingTest = useBugTest("should be rated a 3.5", () => {
+    const rating = containerRef.current.querySelector('[data-test="rating"]');
+    // eslint-disable-next-line
+    expect(rating).not.to.be.null;
+    expect(rating).to.have.attr("data-test-rating", "3.5");
+  });
+  const hasInventoryTest = useBugTest("should be 'In Stock'", () => {
+    const inventory = containerRef.current.querySelector(
+      '[data-test="inventory"]'
+    );
+    // eslint-disable-next-line
+    expect(inventory).not.to.be.null;
+    expect(inventory).to.have.text("In Stock");
+  });
+
   return (
-    <Template bug={bug}>
-      <PrayingMantis 
-        rating={3.5} 
-        reviewCount={35} 
-        inventoryCount={10} 
-        popularity="medium"
-      />
+    <Template
+      bug={bug}
+      tests={[isTrendingTest, hasRatingTest, hasInventoryTest]}
+    >
+      <Box ref={containerRef}>
+        <PrayingMantis
+          rating={0}
+          reviewCount={35}
+          inventoryCount={null}
+          popularity="none"
+        />
+      </Box>
     </Template>
   );
 };
+
+function useBugTest(label, testFn) {
+  const [passed, setPassed] = useState(false);
+
+  useEffect(() => {
+    try {
+      testFn();
+      setPassed(true);
+    } catch {}
+  }, [testFn]);
+
+  return {
+    passed,
+    label,
+  };
+}
 
 /**
  * Fix 3 scenarios to catch bug:
@@ -25,56 +73,68 @@ const Bug = () => {
  * - Undefined or null handling
  * - Default props
  */
-const PrayingMantis = ({ inventoryCount = 0, rating, reviewCount, popularity }) => {
-  const [found, setFound] = useState(false);
-
-  if (!found) {
-    return (
-      <>
-        <Popularity popularity={popularity} />
-        <Inventory inventoryCount={inventoryCount} />
-        {rating >= 0 ? (
-          <Rating rating={rating} reviewCount={reviewCount} />
-        ) : null}        
-        <Text color="text-xweak">the {bug.name} is hiding...</Text>
-      </>
-    );
-  }
-
-  return <CatchBugButton bug={bug} />;
+const PrayingMantis = ({ inventoryCount, rating, reviewCount, popularity }) => {
+  return (
+    <>
+      <Heading level={3}>{bug.name}</Heading>
+      <Popularity popularity={popularity} />
+      <Inventory inventoryCount={inventoryCount} />
+      {rating && <Rating rating={rating} reviewCount={reviewCount} />}
+    </>
+  );
 };
 
 const Popularity = ({ popularity }) => {
   switch (popularity) {
     case "medium":
-      return (<Text color="orange">Trending</Text>);
+      return (
+        <Text data-test="popularity" color="orange">
+          Trending
+        </Text>
+      );
     case "high":
-      return (<Text color="orange">Super Popular!</Text>);
+      return (
+        <Text data-test="popularity" color="orange">
+          Super Popular!
+        </Text>
+      );
     default:
       return null;
   }
-}
+};
 
 const Inventory = ({ inventoryCount }) => {
   if (inventoryCount === 0) {
-    return <Text color="red">Out of Stock</Text>;
+    return (
+      <Text data-test="inventory" color="red">
+        Out of Stock
+      </Text>
+    );
   } else if (inventoryCount <= 5) {
-    return <Text color="red">Only {inventoryCount} left in stock</Text>;
+    return (
+      <Text data-test="inventory" color="red">
+        Only {inventoryCount} left in stock
+      </Text>
+    );
   } else {
-    return <Text color="green">In Stock</Text>;
+    return (
+      <Text data-test="inventory" color="green">
+        In Stock
+      </Text>
+    );
   }
 };
 
 const Rating = ({ rating, reviewCount }) => {
   return (
-    <Box direction="row">
-      {[1, 2, 3, 4, 5].map((star) =>
+    <Box direction="row" data-test="rating" data-test-rating={rating}>
+      {[1, 2, 3, 4, 5].map((star, index) =>
         rating >= star ? (
-          <Star color="gold" />
+          <Star key={index} color="gold" />
         ) : rating >= star - 0.5 ? (
-          <StarHalf color="gold" />
+          <StarHalf key={index} color="gold" />
         ) : (
-          <Star color="lightGray" />
+          <Star key={index} color="lightGray" />
         )
       )}
       <Text>{reviewCount} reviews</Text>

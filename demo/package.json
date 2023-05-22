@@ -40,6 +40,9 @@
     ]
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.18.0"
+    "@cloudflare/workers-types": "^3.18.0",
+    "chai": "^4.3.7",
+    "chai-dom": "^1.11.0",
+    "mocha": "^10.2.0"
   }
 }
