@@ -1,0 +1,17 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    // Enforce displayName for all components (editor-only)
+    // Add to package.json > "eslintConfig" to enforce during build
+    // "react/display-name": ["error", { "ignoreTranspilerName": true }]
+  },
+  "overrides": [
+    {
+      "files": "src/bugs/**/*.js",
+      "rules": {
+        // For chai assertions
+        "no-unused-expressions": "off"
+      }
+    }
+  ]
+}

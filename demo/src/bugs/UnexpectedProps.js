@@ -1,70 +1,45 @@
-import { useState, useEffect, useRef } from "react";
 import { Heading, Text, Box } from "grommet";
 import { Star, StarHalf } from "grommet-icons";
-import { expect, use } from "chai";
-import chaiDOM from "chai-dom";
 
 import Template from "./BugPageTemplate";
-
-use(chaiDOM);
+import { expect, useBugRef, useBugTest } from "./tests";
 
 const Bug = () => {
-  const containerRef = useRef();
+  const { ref, findByTestId } = useBugRef();
   const isTrendingTest = useBugTest("should be trending", () => {
-    const isTrending = containerRef.current.querySelector(
-      '[data-test="popularity"]'
-    );
-    // eslint-disable-next-line
+    const isTrending = findByTestId("popularity");
+
     expect(isTrending).not.to.be.null;
     expect(isTrending).to.have.text("Trending");
   });
   const hasRatingTest = useBugTest("should be rated a 3.5", () => {
-    const rating = containerRef.current.querySelector('[data-test="rating"]');
-    // eslint-disable-next-line
+    const rating = findByTestId("rating");
+
     expect(rating).not.to.be.null;
     expect(rating).to.have.attr("data-test-rating", "3.5");
   });
   const hasInventoryTest = useBugTest("should be 'In Stock'", () => {
-    const inventory = containerRef.current.querySelector(
-      '[data-test="inventory"]'
-    );
-    // eslint-disable-next-line
+    const inventory = findByTestId("inventory");
+
     expect(inventory).not.to.be.null;
     expect(inventory).to.have.text("In Stock");
   });
 
   return (
     <Template
+      ref={ref}
       bug={bug}
       tests={[isTrendingTest, hasRatingTest, hasInventoryTest]}
     >
-      <Box ref={containerRef}>
-        <PrayingMantis
-          rating={0}
-          reviewCount={35}
-          inventoryCount={null}
-          popularity="none"
-        />
-      </Box>
+      <PrayingMantis
+        rating={0}
+        reviewCount={35}
+        inventoryCount={null}
+        popularity="none"
+      />
     </Template>
   );
 };
-
-function useBugTest(label, testFn) {
-  const [passed, setPassed] = useState(false);
-
-  useEffect(() => {
-    try {
-      testFn();
-      setPassed(true);
-    } catch {}
-  }, [testFn]);
-
-  return {
-    passed,
-    label,
-  };
-}
 
 /**
  * Fix 3 scenarios to catch bug:

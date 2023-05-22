@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Button, Main, Box, Text, PageHeader, Heading } from "grommet";
 import {
   Bug,
@@ -13,7 +13,7 @@ import { useBugNet } from "../BugNet";
 
 import CatchBugButton from "./CatchBugButton";
 
-const BugPageTemplate = ({ bug, tests, children }) => {
+const BugPageTemplate = ({ bug, tests, children }, ref) => {
   const { hasBug } = useBugNet();
   const [alreadyCaught, setAlreadyCaught] = React.useState(hasBug(bug.name));
 
@@ -57,7 +57,10 @@ const BugPageTemplate = ({ bug, tests, children }) => {
           <Box direction="row">
             <Box
               pad="small"
-              border={{ size: "2px", color: passed ? "status-ok" : "status-error" }}
+              border={{
+                size: "2px",
+                color: passed ? "status-ok" : "status-error",
+              }}
               round="small"
               margin="small"
               elevation="large"
@@ -74,7 +77,11 @@ const BugPageTemplate = ({ bug, tests, children }) => {
                 </Text>
               </Box>
               {tests.map((bugTest) => (
-                <Box key={bugTest.label} margin={{ bottom: 'xsmall'}} direction="row">
+                <Box
+                  key={bugTest.label}
+                  margin={{ bottom: "xsmall" }}
+                  direction="row"
+                >
                   {bugTest.passed ? (
                     <StatusGood color="green" />
                   ) : (
@@ -126,7 +133,7 @@ const BugPageTemplate = ({ bug, tests, children }) => {
                   inspection area
                 </Text>
               </Box>
-              {children}
+              <Box ref={ref}>{children}</Box>
             </Box>
           </Box>
         </>
@@ -143,4 +150,4 @@ function useBugTestSummary(tests) {
   };
 }
 
-export default BugPageTemplate;
+export default forwardRef(BugPageTemplate);
