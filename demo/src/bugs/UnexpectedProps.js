@@ -117,9 +117,8 @@ export const bug = {
     "this precocious praying mantis can cause components to render with props you aren't expecting",
   name: "Precocious Praying Mantis",
   price: "$26.99",
-  route: "/bug/props",
+  route: "/bug/praying-mantis",
   component: Bug,
-  order: 1,
 };
 
 export default Bug;

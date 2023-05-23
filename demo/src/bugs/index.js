@@ -1,9 +1,23 @@
-export { bug as unexpectedPropsBug } from "./UnexpectedProps";
-export { bug as changingPropsBug } from './ChangingProps';
-export { bug as unexpectedStateBug } from "./UnexpectedState";
-export { bug as staleHooksBug } from "./StaleHooks";
-export { bug as excessiveRenderBug } from "./ExcessiveRender";
-export { bug as cascadingRenderBug } from "./CascadingRender";
-export { bug as delayedRenderBug } from "./DelayedRender";
-export { bug as longRunningRenderBug } from "./LongRunningRender";
-export { bug as strictModeBugs } from "./StrictMode";
+import { bug as unexpectedPropsBug } from "./UnexpectedProps";
+import { bug as changingPropsBug } from "./ChangingProps";
+import { bug as unexpectedStateBug } from "./UnexpectedState";
+import { bug as staleHooksBug } from "./StaleHooks";
+import { bug as excessiveRenderBug } from "./ExcessiveRender";
+import { bug as cascadingRenderBug } from "./CascadingRender";
+import { bug as delayedRenderBug } from "./DelayedRender";
+import { bug as longRunningRenderBug } from "./LongRunningRender";
+import { bug as strictModeBugs } from "./StrictMode";
+
+const bugs = [
+  unexpectedPropsBug,
+  changingPropsBug,
+  unexpectedStateBug,
+  staleHooksBug,
+  excessiveRenderBug,
+  cascadingRenderBug,
+  delayedRenderBug,
+  longRunningRenderBug,
+  strictModeBugs,
+];
+
+export default bugs;

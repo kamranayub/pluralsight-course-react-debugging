@@ -160,9 +160,8 @@ export const bug = {
     "this puffy pillbug can cause confusion and chaos when trying to modify props or state",
   name: "Puffy Pillbug",
   price: "$7.99",
-  route: "/bug/changing-props",
+  route: "/bug/puffy-pillbug",
   component: Bug,
-  order: 2,
 };
 
 export default Bug;
