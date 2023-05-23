@@ -41,15 +41,17 @@ const PuffyPillbug = ({ liked = null, attributes }) => {
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
-      <LikeButton liked={liked} />
+      <LikeButton
+        liked={liked}
+        likedBy={["Bugcatcher Laura", "Grubeater Kelly"]}
+      />
       <BugAttributes attributes={attributes} />
     </>
   );
 };
 
-const LikeButton = ({ liked }) => {
+const LikeButton = ({ liked, likedBy }) => {
   let likeValue = liked === null ? null : liked ? "like" : "dislike";
-  const [likedBy] = useState(["Bugcatcher Laura", "Grubeater Kelly"]);
 
   const handleOnChange = (event) => {
     const isLiked = event.target.value === "like";
@@ -66,7 +68,7 @@ const LikeButton = ({ liked }) => {
   };
 
   useBugTest("should be liked", ({ findByTestId }) => {
-    expect(findByTestId("liked")).to.have.attr("data-liked", "true");
+    expect(findByTestId("liked")).to.have.attr("data-liked", "like");
   });
 
   useBugTest("should be liked by Buglearner Anonymous", ({ findByTestId }) => {
@@ -78,7 +80,7 @@ const LikeButton = ({ liked }) => {
       <ThumbsRating
         name="liked"
         data-test="liked"
-        data-liked={liked}
+        data-liked={likeValue}
         value={likeValue}
         onChange={handleOnChange}
       />
@@ -104,8 +106,10 @@ function BugAttributes({ attributes }) {
   const onLevelDown = () => setLevel((prevLevel) => prevLevel - 1);
 
   useEffect(() => {
-    Object.entries(attributes).forEach(([, value]) => {
-      value += (level - 1) * 2;
+    Object.entries(attributes).forEach(([key, value]) => {
+      if (typeof value === "number") {
+        attributes[key] = value + (level - 1) * 2;
+      }
     });
   }, [level, attributes]);
 
