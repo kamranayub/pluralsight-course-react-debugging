@@ -1,4 +1,5 @@
 export { bug as unexpectedPropsBug } from "./UnexpectedProps";
+export { bug as changingPropsBug } from './ChangingProps';
 export { bug as unexpectedStateBug } from "./UnexpectedState";
 export { bug as staleHooksBug } from "./StaleHooks";
 export { bug as excessiveRenderBug } from "./ExcessiveRender";
