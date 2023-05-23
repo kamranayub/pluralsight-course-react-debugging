@@ -1,31 +1,110 @@
-import { useEffect, useState, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+} from "react";
 import { expect, use } from "chai";
 import chaiDOM from "chai-dom";
 
 use(chaiDOM);
 
-function useBugTest(label, testFn) {
-  const [passed, setPassed] = useState(false);
+export { expect };
 
-  useEffect(() => {
-    try {
-      testFn();
-      setPassed(true);
-    } catch {}
-  }, [testFn]);
+const BugTestContext = createContext({});
+const DEFAULT_STATE = {};
 
-  return {
-    passed,
-    label,
-  };
+export function useBugTestContext() {
+  return useContext(BugTestContext);
 }
 
-function useBugRef() {
+export function BugTestsProvider({ children }) {
   const containerRef = useRef();
   const findByTestId = (id) =>
     containerRef.current.querySelector(`[data-test="${id}"]`);
+  const testSummary = useRef(DEFAULT_STATE);
+  const listeners = useRef([]);
 
-  return { ref: containerRef, findByTestId };
+  const reportTest = (label, passed) => {
+    testSummary.current = {
+      ...testSummary.current,
+      [label]: passed,
+    };
+
+    for (let i = 0; i < listeners.current.length; i++) {
+      listeners.current[i]();
+    }
+  };
+
+  const subscribe = (listener) => {
+    listeners.current.push(listener);
+  };
+
+  useEffect(
+    () => () => {
+      listeners.current.length = 0;
+    },
+    []
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      ref: containerRef,
+      getTestSummary: () => testSummary.current,
+      reportTest,
+      findByTestId,
+      subscribe,
+    }),
+    []
+  );
+
+  return (
+    <BugTestContext.Provider value={contextValue}>
+      {children}
+    </BugTestContext.Provider>
+  );
 }
 
-export { expect, useBugRef, useBugTest };
+export function useBugTest(label, testFn) {
+  const { findByTestId, reportTest } = useBugTestContext();
+
+  useEffect(() => {
+    try {
+      testFn({ findByTestId });
+      reportTest(label, true);
+    } catch {
+      reportTest(label, false);
+    }
+  }, [testFn, reportTest, findByTestId, label]);
+
+  return null;
+}
+
+export function useBugTestSummary() {
+  const { getTestSummary, subscribe } = useBugTestContext();
+  const [testSummary, setTestSummary] = useState(getTestSummary());
+
+  subscribe(() => {
+    setTestSummary(getTestSummary());
+  });
+
+  const passed = useMemo(
+    () => Object.values(testSummary).every((b) => b),
+    [testSummary]
+  );
+  const tests = useMemo(
+    () =>
+      Object.keys(testSummary).map((label) => ({
+        label,
+        passed: testSummary[label],
+      })),
+    [testSummary]
+  );
+
+  return {
+    passed,
+    tests,
+  };
+}

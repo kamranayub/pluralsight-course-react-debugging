@@ -2,40 +2,22 @@ import { Heading, Text, Box } from "grommet";
 import { Star, StarHalf } from "grommet-icons";
 
 import Template from "./BugPageTemplate";
-import { expect, useBugRef, useBugTest } from "./tests";
+import { expect, useBugTest } from "./tests";
+
+const POPULARITY = {
+  trending: 1,
+  popular: 2,
+  none: null,
+};
 
 const Bug = () => {
-  const { ref, findByTestId } = useBugRef();
-  const isTrendingTest = useBugTest("should be trending", () => {
-    const isTrending = findByTestId("popularity");
-
-    expect(isTrending).not.to.be.null;
-    expect(isTrending).to.have.text("Trending");
-  });
-  const hasRatingTest = useBugTest("should be rated a 3.5", () => {
-    const rating = findByTestId("rating");
-
-    expect(rating).not.to.be.null;
-    expect(rating).to.have.attr("data-test-rating", "3.5");
-  });
-  const hasInventoryTest = useBugTest("should be 'In Stock'", () => {
-    const inventory = findByTestId("inventory");
-
-    expect(inventory).not.to.be.null;
-    expect(inventory).to.have.text("In Stock");
-  });
-
   return (
-    <Template
-      ref={ref}
-      bug={bug}
-      tests={[isTrendingTest, hasRatingTest, hasInventoryTest]}
-    >
+    <Template bug={bug}>
       <PrayingMantis
         rating={0}
         reviewCount={35}
         inventoryCount={null}
-        popularity="none"
+        popularity="trending"
       />
     </Template>
   );
@@ -49,6 +31,18 @@ const Bug = () => {
  * - Default props
  */
 const PrayingMantis = ({ inventoryCount, rating, reviewCount, popularity }) => {
+  useBugTest("should be trending", ({ findByTestId }) => {
+    expect(findByTestId("popularity")).to.have.text("Trending");
+  });
+
+  useBugTest("should be rated a 3.5", ({ findByTestId }) => {
+    expect(findByTestId("rating")).to.have.attr("data-test-rating", "3.5");
+  });
+
+  useBugTest("should be 'In Stock'", ({ findByTestId }) => {
+    expect(findByTestId("inventory")).to.have.text("In Stock");
+  });
+
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
@@ -61,13 +55,13 @@ const PrayingMantis = ({ inventoryCount, rating, reviewCount, popularity }) => {
 
 const Popularity = ({ popularity }) => {
   switch (popularity) {
-    case "medium":
+    case POPULARITY.trending:
       return (
         <Text data-test="popularity" color="orange">
           Trending
         </Text>
       );
-    case "high":
+    case POPULARITY.popular:
       return (
         <Text data-test="popularity" color="orange">
           Super Popular!
@@ -78,7 +72,7 @@ const Popularity = ({ popularity }) => {
   }
 };
 
-const Inventory = ({ inventoryCount }) => {
+const Inventory = ({ inventoryCount = 0 }) => {
   if (inventoryCount === 0) {
     return (
       <Text data-test="inventory" color="red">
