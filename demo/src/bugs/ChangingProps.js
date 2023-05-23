@@ -10,7 +10,7 @@ import {
 } from "grommet";
 
 import Template from "./BugPageTemplate";
-import { expect, useBugTest } from "./tests";
+import { expect, useBugTest, useBugTestOnce } from "./tests";
 
 const Bug = () => {
   return (
@@ -38,6 +38,31 @@ const Bug = () => {
  * - Changing objects or arrays
  */
 const PuffyPillbug = ({ liked = null, attributes }) => {
+  const [hasLeveledUp, setHasLeveledUp] = useState(false);
+  const [hasLeveledDown, setHasLeveledDown] = useState(false);
+
+  const handleOnLevelChange = (level) => {
+    if (level > 1) {
+      setHasLeveledUp(true);
+    } else if (hasLeveledUp && level === 1) {
+      setHasLeveledDown(true);
+    }
+  };
+
+  useBugTestOnce("should increase stats on level up", ({ findByTestId }) => {
+    const health = parseInt(findByTestId("attribute: Health").innerText, 10);
+
+    expect(hasLeveledUp).to.be.true;
+    expect(health).to.be.above(50);
+  });
+
+  useBugTestOnce("should reset stats at level 1", ({ findByTestId }) => {
+    const health = parseInt(findByTestId("attribute: Health").innerText, 10);
+
+    expect(hasLeveledDown).to.be.true;
+    expect(health).to.equal(50);
+  });
+
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
@@ -45,7 +70,10 @@ const PuffyPillbug = ({ liked = null, attributes }) => {
         liked={liked}
         likedBy={["Bugcatcher Laura", "Grubeater Kelly"]}
       />
-      <BugAttributes attributes={attributes} />
+      <BugAttributes
+        attributes={attributes}
+        onLevelChange={handleOnLevelChange}
+      />
     </>
   );
 };
@@ -100,7 +128,7 @@ const LikeButton = ({ liked, likedBy }) => {
   );
 };
 
-function BugAttributes({ attributes }) {
+function BugAttributes({ attributes, onLevelChange }) {
   const [level, setLevel] = useState(1);
   const onLevelUp = () => setLevel((prevLevel) => prevLevel + 1);
   const onLevelDown = () => setLevel((prevLevel) => prevLevel - 1);
@@ -113,11 +141,9 @@ function BugAttributes({ attributes }) {
     });
   }, [level, attributes]);
 
-  useBugTest("should increase stats on level up", ({ findByTestId }) => {
-    const health = parseInt(findByTestId("attribute: Health").innerText, 10);
-
-    expect(health).to.be.above(50);
-  });
+  useEffect(() => {
+    onLevelChange(level);
+  }, [level, onLevelChange]);
 
   return (
     <Box>

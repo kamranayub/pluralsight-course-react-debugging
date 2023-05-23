@@ -82,6 +82,25 @@ export function useBugTest(label, testFn) {
   return null;
 }
 
+export function useBugTestOnce(label, testFn) {
+  const { findByTestId, reportTest } = useBugTestContext();
+  const [hasPassedOnce, setHasPassedOnce] = useState(false);
+
+  useEffect(() => {
+    if (hasPassedOnce) return;
+
+    try {
+      testFn({ findByTestId });
+      reportTest(label, true);
+      setHasPassedOnce(true);
+    } catch {
+      reportTest(label, false);
+    }
+  }, [testFn, reportTest, findByTestId, label, hasPassedOnce]);
+
+  return null;
+}
+
 export function useBugTestSummary() {
   const { getTestSummary, subscribe } = useBugTestContext();
   const [testSummary, setTestSummary] = useState(getTestSummary());
