@@ -45,9 +45,6 @@ const PilferingPillbug = ({ attributes }) => {
       <Heading level={3}>{bug.name}</Heading>
       <LikeButton liked={null} />
       <BugAttributes attributes={attributes} />
-      <Heading level={3} margin={{ top: "medium" }}>
-        summary
-      </Heading>
     </>
   );
 };
