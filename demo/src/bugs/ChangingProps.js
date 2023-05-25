@@ -15,7 +15,9 @@ import { expect, useBugTest, useBugTestOnce } from "./tests";
 const Bug = () => {
   return (
     <Template bug={bug}>
-      <PuffyPillbug
+      <PilferingPillbug
+        liked={null}
+        level={1}
         attributes={{
           Health: 50,
           Attack: 20,
@@ -31,13 +33,15 @@ const Bug = () => {
 };
 
 /**
- * Fix 3 scenarios to catch bug:
+ * Fix issues to catch bug:
  *
  * - Immutability
  * - Changing state vs. props
  * - Changing objects or arrays
  */
-const PuffyPillbug = ({ liked = null, attributes }) => {
+const PilferingPillbug = ({ level, liked = null, attributes }) => {
+  const [purchaseLevel, setPurchaseLevel] = useState(level);
+  const [likeStatus, setLikeStatus] = useState(liked);
   const [hasLeveledUp, setHasLeveledUp] = useState(false);
   const [hasLeveledDown, setHasLeveledDown] = useState(false);
 
@@ -47,6 +51,11 @@ const PuffyPillbug = ({ liked = null, attributes }) => {
     } else if (hasLeveledUp && level === 1) {
       setHasLeveledDown(true);
     }
+    setPurchaseLevel(level);
+  };
+
+  const handleOnLikeChange = (likeState) => {
+    setLikeStatus(likeState);
   };
 
   useBugTestOnce("should increase stats on level up", ({ findByTestId }) => {
@@ -63,31 +72,46 @@ const PuffyPillbug = ({ liked = null, attributes }) => {
     expect(health).to.equal(50);
   });
 
+  useBugTest("should display a purchase summary", ({ findByTestId }) => {
+    expect(findByTestId("summary").innerText).to.match(/level \d+/);
+    expect(findByTestId("summary").innerText).to.match(/you (like|dislike)$/);
+  });
+
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
       <LikeButton
-        liked={liked}
+        liked={likeStatus}
         likedBy={["Bugcatcher Laura", "Grubeater Kelly"]}
+        onLikeChange={handleOnLikeChange}
       />
       <BugAttributes
         attributes={attributes}
         onLevelChange={handleOnLevelChange}
       />
+      <Heading level={3} margin={{ top: "medium"}}>summary</Heading>
+      <Text data-test="summary" color="text-weak">
+        You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
+        {likeStatus ?? 'haven\'t decided if you like or not'}
+      </Text>
     </>
   );
 };
 
 const LikeButton = ({ liked, likedBy }) => {
-  let likeValue = liked === null ? null : liked ? "like" : "dislike";
+  let likeValue = 
+    liked === null ? null : liked ? "like" : "dislike"
+  ;
 
   const handleOnChange = (event) => {
     const isLiked = event.target.value === "like";
     if (isLiked) {
-      likeValue = true;
-      likedBy.splice(0, 0, "Buglearner Anonymous");
+      likeValue = "like";
+      if (likedBy.indexOf("Buglearner Anonymous") < 0) {
+        likedBy.splice(0, 0, "Buglearner Anonymous");
+      }
     } else {
-      likeValue = false;
+      likeValue = "dislike";
       const existingLikedBy = likedBy.indexOf("Buglearner Anonymous");
       if (likedBy > -1) {
         likedBy.splice(existingLikedBy, 1);
@@ -102,6 +126,14 @@ const LikeButton = ({ liked, likedBy }) => {
   useBugTest("should be liked by Buglearner Anonymous", ({ findByTestId }) => {
     expect(findByTestId("liked-by: Buglearner Anonymous")).to.exist;
   });
+
+  useBugTestOnce(
+    "should remove Buglearner Anonymous when disliked",
+    ({ findByTestId }) => {
+      expect(likeValue).to.equal("dislike");
+      expect(findByTestId("liked-by: Buglearner Anonymous")).not.to.exist;
+    }
+  );
 
   return (
     <Box direction="row">
@@ -134,11 +166,11 @@ function BugAttributes({ attributes, onLevelChange }) {
   const onLevelDown = () => setLevel((prevLevel) => prevLevel - 1);
 
   useEffect(() => {
-    Object.entries(attributes).forEach(([key, value]) => {
-      if (typeof value === "number") {
-        attributes[key] = value + (level - 1) * 2;
-      }
-    });
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (typeof value === "number") {
+          attributes[key] = value + (level - 1) * 2;
+        }
+      });
   }, [level, attributes]);
 
   useEffect(() => {
@@ -183,10 +215,10 @@ function BugAttributes({ attributes, onLevelChange }) {
 export const bug = {
   title: "Changing Props",
   subtitle:
-    "this puffy pillbug can cause confusion and chaos when trying to modify props or state",
-  name: "Puffy Pillbug",
+    "this pilfering pillbug can cause confusion and chaos when trying to modify props or state",
+  name: "Pilfering Pillbug",
   price: "$7.99",
-  route: "/bug/puffy-pillbug",
+  route: "/bug/pilfering-pillbug",
   component: Bug,
 };
 

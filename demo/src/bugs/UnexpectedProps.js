@@ -24,7 +24,7 @@ const Bug = () => {
 };
 
 /**
- * Fix 3 scenarios to catch bug:
+ * Fix issues to catch bug:
  *
  * - Prop data types
  * - Undefined or null handling
