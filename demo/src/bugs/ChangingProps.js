@@ -79,8 +79,8 @@ const LikeButton = ({ liked }) => {
 
 function BugAttributes({ attributes }) {
   const [level, setLevel] = useState(1);
-  const onLevelUp = () => setLevel((prevLevel) => prevLevel + 1);
-  const onLevelDown = () => setLevel((prevLevel) => prevLevel - 1);
+  const onLevelUp = () => setLevel(level + 1);
+  const onLevelDown = () => setLevel(level - 1);
 
   const [hasLeveledUp, setHasLeveledUp] = useState(false);
   const [hasLeveledDown, setHasLeveledDown] = useState(false);

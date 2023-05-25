@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Heading,
-  Text,
-  Box,
-  ThumbsRating,
-  NameValueList,
-  NameValuePair,
-} from "grommet";
+import { Button, Heading, Text, Box, ThumbsRating } from "grommet";
+import { AddCircle, SubtractCircle } from "grommet-icons";
 
 import Template from "./BugPageTemplate";
 import { expect, useBugTest, useBugTestOnce } from "./tests";
@@ -17,15 +10,6 @@ const Bug = () => {
     liked: null,
     likedBy: ["Bugcatcher Laura", "Grubeater Kelly"],
     level: 1,
-    attributes: {
-      Health: 50,
-      Attack: 20,
-      Defense: 55,
-      "Sp. Attack": 25,
-      "Sp. Defense": 25,
-      Speed: 30,
-      Moves: ["Tackle", "Harden"],
-    },
   };
 
   return (
@@ -44,6 +28,7 @@ const Bug = () => {
 const PilferingPillbug = (props) => {
   const [purchaseLevel, setPurchaseLevel] = useState(props.level);
   const [likeStatus, setLikeStatus] = useState(props.liked);
+  const [currentlyLikedBy, setCurrentlyLikedBy] = useState(props.likedBy);
 
   const handleOnLevelChange = (level) => {
     setPurchaseLevel(level);
@@ -51,6 +36,14 @@ const PilferingPillbug = (props) => {
 
   const handleOnLikeChange = (likeState) => {
     setLikeStatus(likeState);
+
+    if (currentlyLikedBy.indexOf("Buglearner Anonymous") < 0) {
+      setCurrentlyLikedBy(["Buglearner Anonymous", ...currentlyLikedBy]);
+    } else {
+      setCurrentlyLikedBy(
+        currentlyLikedBy.filter((by) => by !== "Buglearner Anonymous")
+      );
+    }
   };
 
   useBugTest("should display a purchase summary", ({ findByTestId }) => {
@@ -69,6 +62,7 @@ const PilferingPillbug = (props) => {
       <Heading level={3}>{bug.name}</Heading>
       <LikeButton
         liked={likeStatus}
+        likedBy={currentlyLikedBy}
         onLikeChange={handleOnLikeChange}
         {...props}
       />
@@ -94,16 +88,9 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
     const isLiked = event.target.value === "like";
     if (isLiked) {
       setLikeValue("like");
-      if (likedBy.indexOf("Buglearner Anonymous") < 0) {
-        likedBy.splice(0, 0, "Buglearner Anonymous");
-      }
       setHasLiked(true);
     } else {
       setLikeValue("dislike");
-      const existingLikedBy = likedBy.indexOf("Buglearner Anonymous");
-      if (likedBy > -1) {
-        likedBy.splice(existingLikedBy, 1);
-      }
     }
     onLikeChange(likeValue);
   };
@@ -146,60 +133,40 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
   );
 };
 
-function BugAttributes({ attributes, onLevelChange }) {
-  const [level, setLevel] = useState(1);
-  const [leveledAttributes, setLeveledAttributes] = useState(attributes);
-  const onLevelUp = () => setLevel((prevLevel) => prevLevel + 1);
-  const onLevelDown = () => setLevel((prevLevel) => prevLevel - 1);
-
-  useEffect(() => {
-    setLeveledAttributes((prevAttributes) => {
-      const newAttributes = { ...prevAttributes };
-      Object.entries(attributes).forEach(([key, value]) => {
-        if (typeof value === "number") {
-          newAttributes[key] = value + (level - 1) * 2;
-        }
-      });
-
-      return newAttributes;
-    });
-  }, [level, attributes]);
-
-  useEffect(() => {
-    onLevelChange(level);
-  }, [level, onLevelChange]);
+function BugAttributes({ level, onLevelChange }) {
+  const [currentLevel, setCurrentLevel] = useState(level);
+  const onLevelUp = () => {
+    setCurrentLevel(currentLevel + 1);
+    onLevelChange(currentLevel);
+  };
+  const onLevelDown = () => {
+    setCurrentLevel(currentLevel - 1);
+    onLevelChange(currentLevel);
+  };
 
   return (
     <Box>
-      <Heading level={3}>Attributes</Heading>
+      <Heading level={3}>choose level</Heading>
       <Box
         direction="row"
         gap="small"
         align="center"
         margin={{ bottom: "medium" }}
       >
-        <Text color="text-weak">Level {level}</Text>
         <Button
           onClick={onLevelDown}
-          disabled={level <= 1}
-          label="level down"
+          disabled={currentLevel <= 1}
+          icon={<SubtractCircle />}
         />
+        <Text color="text-weak">Level {currentLevel}</Text>
+
         <Button
           primary
           onClick={onLevelUp}
-          disabled={level >= 100}
-          label="level up"
+          disabled={currentLevel >= 100}
+          icon={<AddCircle />}
         />
       </Box>
-      <NameValueList>
-        {Object.entries(leveledAttributes).map(([key, value]) => (
-          <NameValuePair key={key} name={key}>
-            <Text color="text-strong" data-test={`attribute: ${key}`}>
-              {typeof value === "object" ? value.join(", ") : value}
-            </Text>
-          </NameValuePair>
-        ))}
-      </NameValueList>
     </Box>
   );
 }
