@@ -1,4 +1,4 @@
-import { bug as unexpectedPropsBug } from "./UnexpectedProps";
+import { bug as unexpectedPropsBug } from "./UnexpectedPropTypes";
 import { bug as changingPropsBug } from "./ChangingProps";
 import { bug as passingPropsBug } from "./PassingProps";
 import { bug as unexpectedStateBug } from "./UnexpectedState";

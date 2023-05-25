@@ -207,10 +207,10 @@ function BugAttributes({ attributes, onLevelChange }) {
 export const bug = {
   title: "Passing Props",
   subtitle:
-    "this pernicious pigwing can cause confusion and chaos when trying to modify props or state",
-  name: "Pernicious Pigwing",
+    "this pilfering pillbug can cause confusion and chaos when trying to modify props or state",
+  name: "Pilfering Pillbug",
   price: "$7.99",
-  route: "/bug/pernicious-pigwing",
+  route: "/bug/pilfering-pillbug",
   component: Bug,
 };
 

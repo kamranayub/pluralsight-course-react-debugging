@@ -13,7 +13,7 @@ const POPULARITY = {
 const Bug = () => {
   return (
     <Template bug={bug}>
-      <PrayingMantis
+      <UnseenUmbrellaMoth
         rating={0}
         reviewCount={35}
         inventoryCount={null}
@@ -30,7 +30,7 @@ const Bug = () => {
  * - Undefined or null handling
  * - Default props
  */
-const PrayingMantis = ({ inventoryCount, rating, reviewCount, popularity }) => {
+const UnseenUmbrellaMoth = ({ inventoryCount, rating, reviewCount, popularity }) => {
   useBugTest("should be trending", ({ findByTestId }) => {
     expect(findByTestId("popularity")).to.have.text("Trending");
   });
@@ -112,12 +112,12 @@ const Rating = ({ rating, reviewCount }) => {
 };
 
 export const bug = {
-  title: "Unexpected Props",
+  title: "Unexpected Prop Types",
   subtitle:
-    "this precocious praying mantis can cause components to render with props you aren't expecting",
-  name: "Precocious Praying Mantis",
+    "this unseen umbrella moth can cause components to render with different prop value types you aren't expecting",
+  name: "Unseen Umbrella Moth",
   price: "$26.99",
-  route: "/bug/praying-mantis",
+  route: "/bug/umbrella-moth",
   component: Bug,
 };
 

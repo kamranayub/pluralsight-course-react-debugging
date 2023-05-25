@@ -15,7 +15,7 @@ import { expect, useBugTest, useBugTestOnce } from "./tests";
 const Bug = () => {
   return (
     <Template bug={bug}>
-      <PilferingPillbug
+      <CrimsonCaterpillar
         liked={null}
         level={1}
         attributes={{
@@ -39,7 +39,7 @@ const Bug = () => {
  * - Changing state vs. props
  * - Changing objects or arrays
  */
-const PilferingPillbug = ({ attributes }) => {
+const CrimsonCaterpillar = ({ attributes }) => {
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
@@ -85,13 +85,11 @@ function BugAttributes({ attributes }) {
   const [hasLeveledUp, setHasLeveledUp] = useState(false);
   const [hasLeveledDown, setHasLeveledDown] = useState(false);
 
-  useEffect(() => {
-    Object.entries(attributes).forEach(([key, value]) => {
-      if (typeof value === "number") {
-        attributes[key] = value + (level - 1) * 2;
-      }
-    });
-  }, [level, attributes]);
+  Object.entries(attributes).forEach(([key, value]) => {
+    if (typeof value === "number") {
+      attributes[key] = value + (level - 1) * 2;
+    }
+  });
 
   useEffect(() => {
     if (level > 1) {
@@ -153,10 +151,10 @@ function BugAttributes({ attributes }) {
 export const bug = {
   title: "Changing Props",
   subtitle:
-    "this pilfering pillbug can cause confusion and chaos when trying to modify props or state",
-  name: "Pilfering Pillbug",
+    "this crimson caterpillar can cause confusion and chaos when trying to modify props or state",
+  name: "Crimson Caterpillar",
   price: "$7.99",
-  route: "/bug/pilfering-pillbug",
+  route: "/bug/crimson-caterpillar",
   component: Bug,
 };
 
