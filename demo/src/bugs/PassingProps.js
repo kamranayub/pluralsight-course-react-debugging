@@ -61,6 +61,15 @@ const PilferingPillbug = (props) => {
     }
   });
 
+  useBugTest(
+    "should display a level 3 heading for purchase summary",
+    ({ findByTestId }) => {
+      expect(
+        window.getComputedStyle(findByTestId("purchaseSummaryHeading")).fontSize
+      ).to.equal("26px");
+    }
+  );
+
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
@@ -70,18 +79,12 @@ const PilferingPillbug = (props) => {
         onLikeChange={handleOnLikeChange}
         {...props}
       />
-      <BugAttributes onLevelChange={handleOnLevelChange} {...props} />
+      <BugAttributes
+        onLevelChange={handleOnLevelChange}
+        level={purchaseLevel}
+      />
       {purchaseLevel ? (
-        <>
-          <Heading level={3} margin={{ top: "medium" }}>
-            summary
-          </Heading>
-
-          <Text data-test="summary" color="text-weak">
-            You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
-            {likeStatus ?? "haven't decided if you like or not"}
-          </Text>
-        </>
+        <PurchaseSummary level={purchaseLevel} liked={likeStatus} />
       ) : null}
     </>
   );
@@ -137,14 +140,11 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
 };
 
 function BugAttributes({ level, onLevelChange }) {
-  const [currentLevel, setCurrentLevel] = useState(level ?? 1);
   const onLevelUp = () => {
-    setCurrentLevel(currentLevel + 1);
-    onLevelChange(currentLevel);
+    onLevelChange(level + 1);
   };
   const onLevelDown = () => {
-    setCurrentLevel(currentLevel - 1);
-    onLevelChange(currentLevel);
+    onLevelChange(level - 1);
   };
 
   return (
@@ -158,21 +158,41 @@ function BugAttributes({ level, onLevelChange }) {
       >
         <Button
           onClick={onLevelDown}
-          disabled={currentLevel <= 1}
+          disabled={level <= 1}
           icon={<SubtractCircle />}
         />
         <Text color="text-weak" data-test="level">
-          Level {currentLevel}
+          Level {level}
         </Text>
 
         <Button
           primary
           onClick={onLevelUp}
-          disabled={currentLevel >= 100}
+          disabled={level >= 100}
           icon={<AddCircle />}
         />
       </Box>
     </Box>
+  );
+}
+
+function PurchaseSummary({ purchaseLevel, purchaseLikability, ...props }) {
+  return (
+    <>
+      <Heading
+        data-test="purchaseSummaryHeading"
+        level={3}
+        margin={{ top: "medium" }}
+        {...props}
+      >
+        summary
+      </Heading>
+
+      <Text data-test="summary" color="text-weak">
+        You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
+        {purchaseLikability ?? "haven't decided if you like or not"}
+      </Text>
+    </>
   );
 }
 
