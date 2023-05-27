@@ -47,7 +47,9 @@ const PilferingPillbug = (props) => {
   };
 
   useBugTest("should display a purchase summary", ({ findByTestId }) => {
-    expect(findByTestId("summary").innerText).to.match(/level \d+/);
+    expect(findByTestId("summary").innerText).to.contain(
+      findByTestId("level").innerText.toLowerCase()
+    );
     if (findByTestId("liked").dataset.liked === "like") {
       expect(findByTestId("summary").innerText).to.match(/you like$/);
     } else if (findByTestId("liked").dataset.liked === "dislike") {
@@ -158,7 +160,9 @@ function BugAttributes({ level, onLevelChange }) {
           disabled={currentLevel <= 1}
           icon={<SubtractCircle />}
         />
-        <Text color="text-weak">Level {currentLevel}</Text>
+        <Text color="text-weak" data-test="level">
+          Level {currentLevel}
+        </Text>
 
         <Button
           primary
