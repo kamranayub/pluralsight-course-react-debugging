@@ -9,7 +9,7 @@ const Bug = () => {
   const initialState = {
     liked: null,
     likedBy: ["Bugcatcher Laura", "Grubeater Kelly"],
-    level: 1,
+    level: null,
   };
 
   return (
@@ -27,7 +27,9 @@ const Bug = () => {
  */
 const PilferingPillbug = (props) => {
   const [purchaseLevel, setPurchaseLevel] = useState(props.level);
-  const [likeStatus, setLikeStatus] = useState(props.liked);
+  const [likeStatus, setLikeStatus] = useState(
+    props.liked === null ? null : props.liked ? "like" : "dislike"
+  );
   const [currentlyLikedBy, setCurrentlyLikedBy] = useState(props.likedBy);
 
   const handleOnLevelChange = (level) => {
@@ -69,32 +71,31 @@ const PilferingPillbug = (props) => {
         {...props}
       />
       <BugAttributes onLevelChange={handleOnLevelChange} {...props} />
-      <Heading level={3} margin={{ top: "medium" }}>
-        summary
-      </Heading>
-      <Text data-test="summary" color="text-weak">
-        You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
-        {likeStatus ?? "haven't decided if you like or not"}
-      </Text>
+      {purchaseLevel ? (
+        <>
+          <Heading level={3} margin={{ top: "medium" }}>
+            summary
+          </Heading>
+
+          <Text data-test="summary" color="text-weak">
+            You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
+            {likeStatus ?? "haven't decided if you like or not"}
+          </Text>
+        </>
+      ) : null}
     </>
   );
 };
 
 const LikeButton = ({ liked, likedBy, onLikeChange }) => {
-  const [likeValue, setLikeValue] = useState(
-    liked === null ? null : liked ? "like" : "dislike"
-  );
   const [hasLiked, setHasLiked] = useState(false);
 
   const handleOnChange = (event) => {
     const isLiked = event.target.value === "like";
     if (isLiked) {
-      setLikeValue("like");
       setHasLiked(true);
-    } else {
-      setLikeValue("dislike");
     }
-    onLikeChange(likeValue);
+    onLikeChange(event.target.value);
   };
 
   useBugTest("should be liked by Buglearner Anonymous", ({ findByTestId }) => {
@@ -105,7 +106,7 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
     "should remove Buglearner Anonymous when disliked",
     ({ findByTestId }) => {
       expect(hasLiked).to.be.true;
-      expect(likeValue).to.equal("dislike");
+      expect(liked).to.equal("dislike");
       expect(findByTestId("liked-by: Buglearner Anonymous")).not.to.exist;
     }
   );
@@ -115,8 +116,8 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
       <ThumbsRating
         name="liked"
         data-test="liked"
-        data-liked={likeValue}
-        value={likeValue}
+        data-liked={liked}
+        value={liked}
         onChange={handleOnChange}
       />
       <Text margin={{ left: "xsmall" }}>Liked by</Text>
@@ -136,7 +137,7 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
 };
 
 function BugAttributes({ level, onLevelChange }) {
-  const [currentLevel, setCurrentLevel] = useState(level);
+  const [currentLevel, setCurrentLevel] = useState(level ?? 1);
   const onLevelUp = () => {
     setCurrentLevel(currentLevel + 1);
     onLevelChange(currentLevel);
