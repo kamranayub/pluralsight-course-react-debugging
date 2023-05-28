@@ -57,7 +57,6 @@ export function useBugTest(label, testFn) {
       testFn({ findByTestId });
       reportTest(label, true);
     } catch (err) {
-      console.error("Test failed:", label, err);
       reportTest(label, false);
     }
     queryClient.invalidateQueries({ queryKey: ["test-summary"] });
@@ -79,7 +78,6 @@ export function useBugTestOnce(label, testFn) {
       reportTest(label, true);
       setHasPassedOnce(true);
     } catch (err) {
-      console.error("Test failed:", label, err);
       reportTest(label, false);
     }
     queryClient.invalidateQueries({ queryKey: ["test-summary"] });

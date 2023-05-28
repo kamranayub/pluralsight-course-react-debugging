@@ -2,7 +2,7 @@ import { bug as unexpectedPropsBug } from "./UnexpectedPropTypes";
 import { bug as changingPropsBug } from "./ChangingProps";
 import { bug as passingPropsBug } from "./PassingProps";
 import { bug as unexpectedStateBug } from "./UnexpectedState";
-import { bug as staleHooksBug } from "./StaleHooks";
+import { bug as hookSideEffectsBug } from "./HookSideEffects";
 import { bug as excessiveRenderBug } from "./ExcessiveRender";
 import { bug as cascadingRenderBug } from "./CascadingRender";
 import { bug as delayedRenderBug } from "./DelayedRender";
@@ -14,7 +14,7 @@ const bugs = [
   changingPropsBug,
   passingPropsBug,
   unexpectedStateBug,
-  staleHooksBug,
+  hookSideEffectsBug,
   excessiveRenderBug,
   cascadingRenderBug,
   delayedRenderBug,
