@@ -1,0 +1,13 @@
+{
+  "bugs": [
+    {
+      "name": "Huggable Honeybee",
+      "price": "$8.99",
+      "promotion": {
+        "name": "Save the Bees Sale",
+        "discount": "10% off",
+        "computedPrice": "$8.09"
+      }
+    }
+  ]
+}
