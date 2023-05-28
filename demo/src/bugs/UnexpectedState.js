@@ -26,10 +26,6 @@ const ShySpider = (props) => {
     setPurchaseLevel(level);
   };
 
-  useEffect(() => {
-    console.log("props.level", props.level, "purchaseLevel", purchaseLevel);
-  }, [props.level, purchaseLevel]);
-
   useBugTest("should display a level", ({ findByTestId }) => {
     expect(findByTestId("level").innerText).to.match(/Level \d+/);
   });

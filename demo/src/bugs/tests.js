@@ -109,8 +109,6 @@ export function useBugTestSummary() {
     [testSummary]
   );
 
-  console.log("useBugTestSummary", passed, tests);
-
   return {
     passed,
     tests,
