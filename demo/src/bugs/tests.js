@@ -6,6 +6,7 @@ import {
   useRef,
   useMemo,
 } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { expect, use } from "chai";
 import chaiDOM from "chai-dom";
 
@@ -14,7 +15,6 @@ use(chaiDOM);
 export { expect };
 
 const BugTestContext = createContext({});
-const DEFAULT_STATE = {};
 
 export function useBugTestContext() {
   return useContext(BugTestContext);
@@ -22,40 +22,21 @@ export function useBugTestContext() {
 
 export function BugTestsProvider({ children }) {
   const containerRef = useRef();
+  const testStateRef = useRef({});
   const findByTestId = (id) =>
     containerRef.current.querySelector(`[data-test="${id}"]`);
-  const testSummary = useRef(DEFAULT_STATE);
-  const listeners = useRef([]);
-
-  const reportTest = (label, passed) => {
-    testSummary.current = {
-      ...testSummary.current,
-      [label]: passed,
-    };
-
-    for (let i = 0; i < listeners.current.length; i++) {
-      listeners.current[i]();
-    }
-  };
-
-  const subscribe = (listener) => {
-    listeners.current.push(listener);
-  };
-
-  useEffect(
-    () => () => {
-      listeners.current.length = 0;
-    },
-    []
-  );
 
   const contextValue = useMemo(
     () => ({
       ref: containerRef,
-      getTestSummary: () => testSummary.current,
-      reportTest,
+      getTestsQueryFn: () => Promise.resolve(testStateRef.current),
+      reportTest: (label, passed) => {
+        testStateRef.current = {
+          ...testStateRef.current,
+          [label]: passed,
+        };
+      },
       findByTestId,
-      subscribe,
     }),
     []
   );
@@ -68,6 +49,7 @@ export function BugTestsProvider({ children }) {
 }
 
 export function useBugTest(label, testFn) {
+  const queryClient = useQueryClient();
   const { findByTestId, reportTest } = useBugTestContext();
 
   useEffect(() => {
@@ -77,13 +59,15 @@ export function useBugTest(label, testFn) {
     } catch {
       reportTest(label, false);
     }
-  }, [testFn, reportTest, findByTestId, label]);
+    queryClient.invalidateQueries({ queryKey: ["test-summary"] });
+  }, [queryClient, reportTest, testFn, findByTestId, label]);
 
   return null;
 }
 
 export function useBugTestOnce(label, testFn) {
   const { findByTestId, reportTest } = useBugTestContext();
+  const queryClient = useQueryClient();
   const [hasPassedOnce, setHasPassedOnce] = useState(false);
 
   useEffect(() => {
@@ -96,21 +80,24 @@ export function useBugTestOnce(label, testFn) {
     } catch {
       reportTest(label, false);
     }
-  }, [testFn, reportTest, findByTestId, label, hasPassedOnce]);
+    queryClient.invalidateQueries({ queryKey: ["test-summary"] });
+  }, [testFn, queryClient, reportTest, findByTestId, label, hasPassedOnce]);
 
   return null;
 }
 
 export function useBugTestSummary() {
-  const { getTestSummary, subscribe } = useBugTestContext();
-  const [testSummary, setTestSummary] = useState(getTestSummary());
-
-  subscribe(() => {
-    setTestSummary(getTestSummary());
+  const { getTestsQueryFn } = useBugTestContext();
+  const { data: testSummary } = useQuery({
+    queryKey: ["test-summary"],
+    placeholderData: {},
+    queryFn: getTestsQueryFn,
   });
 
   const passed = useMemo(
-    () => Object.values(testSummary).every((b) => b),
+    () =>
+      Object.values(testSummary).length > 0 &&
+      Object.values(testSummary).every((b) => b),
     [testSummary]
   );
   const tests = useMemo(
@@ -121,6 +108,8 @@ export function useBugTestSummary() {
       })),
     [testSummary]
   );
+
+  console.log("useBugTestSummary", passed, tests);
 
   return {
     passed,

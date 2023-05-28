@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, Button, Heading, Text, ThumbsRating } from "grommet";
+import { useEffect, useState } from "react";
+import { Box, Button, Heading, Text } from "grommet";
 import { AddCircle, SubtractCircle } from "grommet-icons";
 
 import Template from "./BugPageTemplate";
@@ -26,17 +26,18 @@ const ShySpider = (props) => {
     setPurchaseLevel(level);
   };
 
+  useEffect(() => {
+    console.log("props.level", props.level, "purchaseLevel", purchaseLevel);
+  }, [props.level, purchaseLevel]);
+
+  useBugTest("should display a level", ({ findByTestId }) => {
+    expect(findByTestId("level").innerText).to.match(/Level \d+/);
+  });
+
   useBugTest("should display a purchase summary", ({ findByTestId }) => {
     expect(findByTestId("summary").innerText).to.contain(
       findByTestId("level").innerText.toLowerCase()
     );
-    if (findByTestId("liked").dataset.liked === "like") {
-      expect(findByTestId("summary").innerText).to.match(/you like$/);
-    } else if (findByTestId("liked").dataset.liked === "dislike") {
-      expect(findByTestId("summary").innerText).to.match(/you dislike$/);
-    } else {
-      throw Error("Neither like nor dislike");
-    }
   });
 
   return (
