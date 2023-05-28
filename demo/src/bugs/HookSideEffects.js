@@ -82,9 +82,17 @@ function Price({ price, promotion }) {
 function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
-  useEffect(() => {
-    onQuantityChange(quantity);
-  }, [onQuantityChange, quantity]);
+  // useTrackAnalytics(
+  //   {
+  //     event: "quantity_change",
+  //     quantity: quantity,
+  //   },
+  //   [quantity]
+  // );
+
+  // useEffect(() => {
+  //   onQuantityChange(quantity);
+  // }, [onQuantityChange, quantity]);
 
   return (
     <Box data-test="quantity">
@@ -112,6 +120,15 @@ function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
       </Box>
     </Box>
   );
+}
+
+function useTrackAnalytics(analyticsEvent, dependencies) {
+  const [analyticsEventsSent, setAnalyticsEventsSent] = useState(0);
+
+  useEffect(() => {
+    console.log("tracked analytics event", analyticsEvent);
+    setAnalyticsEventsSent(analyticsEventsSent + 1);
+  }, [analyticsEvent, dependencies, analyticsEventsSent]);
 }
 
 async function fetchBugByName(name) {
