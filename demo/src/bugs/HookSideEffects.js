@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { Button, Box, Text, Tag, Heading } from "grommet";
 import { AddCircle, SubtractCircle } from "grommet-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -15,6 +15,7 @@ const Bug = () => {
 };
 
 const HuggableHoneybee = () => {
+  const [fetchCount, setFetchCount] = useState(0);
   const {
     data: promotion,
     isFetched,
@@ -25,10 +26,15 @@ const HuggableHoneybee = () => {
     placeholderData: [],
     queryFn: ({ queryKey: [, { name }] }) => fetchBugByName(name),
     select: (data) => data?.promotion ?? [],
+    onSuccess: () => setFetchCount(count => count + 1)
   });
 
   useBugTest("should display quantity picker", ({ findByTestId }) => {
     expect(findByTestId("quantity")).to.exist;
+  });
+
+  useBugTest("should not send excessive fetch events", () => {
+    expect(fetchCount).to.be.gt(1).and.lt(100);
   });
 
   return (
@@ -82,6 +88,7 @@ function Price({ price, promotion }) {
 }
 
 function SaleTimer({ expiresInMs }) {
+  const [countdownTimes, setCountdownTimes] = useState(0);
   const [saleCountdown, setSaleCountdown] = useState(expiresInMs);
 
   useEffect(() => {
@@ -90,8 +97,21 @@ function SaleTimer({ expiresInMs }) {
     }, 1000);
   }, []);
 
+  useEffect(() => {
+    if (saleCountdown === expiresInMs) return;
+
+    setCountdownTimes((times) => times + 1);
+  }, [saleCountdown, expiresInMs]);
+
+  useBugTest("should countdown sale accurately", () => {
+    const expectedDuration = expiresInMs - countdownTimes * 1000;
+    expect(countdownTimes).to.be.gt(0);
+    expect(saleCountdown).to.be.lt(expiresInMs);
+    expect(saleCountdown).to.equal(expectedDuration);
+  });
+
   return (
-    <Text color="text-weak" size="small">
+    <Text color="text-weak" size="small" data-test="sale-timer">
       {formatMillisecondsAsDuration(saleCountdown)} remaining before sale ends
     </Text>
   );
@@ -107,18 +127,16 @@ function formatMillisecondsAsDuration(milliseconds) {
 
 function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
   const [quantity, setQuantity] = useState(initialQuantity);
+  const { eventsSent } = useTrackAnalytics();
 
-  // useTrackAnalytics(
-  //   {
-  //     event: "quantity_change",
-  //     quantity: quantity,
-  //   },
-  //   [quantity]
-  // );
+  useEffect(() => {
+    onQuantityChange(quantity);
+  }, [onQuantityChange, quantity]);
 
-  // useEffect(() => {
-  //   onQuantityChange(quantity);
-  // }, [onQuantityChange, quantity]);
+  useBugTest("should not send excessive analytics events", () => {
+    expect(eventsSent).to.be.gt(2);
+    expect(eventsSent).to.be.lt(100);
+  });
 
   return (
     <Box data-test="quantity">
@@ -144,22 +162,47 @@ function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
           icon={<AddCircle />}
         />
       </Box>
+      <AnalyticsTracking quantity={quantity} />
     </Box>
   );
 }
 
-function useTrackAnalytics(analyticsEvent, dependencies) {
-  const [analyticsEventsSent, setAnalyticsEventsSent] = useState(0);
+function AnalyticsTracking({ quantity }) {
+  const { track } = useTrackAnalytics();
 
   useEffect(() => {
-    if (window.navigator.sendBeacon) {
+    track({
+      event: "quantity_change",
+      quantity: quantity,
+    });
+  }, [track, quantity]);
+
+  return null;
+}
+
+function useTrackAnalytics() {
+  const [eventBatch, setEventBatch] = useState([]);
+
+  const track = useCallback((analyticsEvent) => {
+    setEventBatch((batch) => [...batch, analyticsEvent]);
+  });
+
+  useEffect(() => {
+    if (eventBatch.length > 5) {
       window.navigator.sendBeacon(
         "/api/analytics.json",
-        JSON.stringify(analyticsEvent)
+        JSON.stringify(eventBatch)
       );
+      window.__ANALYTICS_EVENTS__ = window.__ANALYTICS_EVENTS__ ?? [];
+      window.__ANALYTICS_EVENTS__.push(...eventBatch);
+      eventBatch.length = 0;
     }
-    setAnalyticsEventsSent(analyticsEventsSent + 1);
-  }, [analyticsEvent, dependencies, analyticsEventsSent]);
+  }, [eventBatch]);
+
+  return {
+    track,
+    eventsSent: window.__ANALYTICS_EVENTS__?.length ?? 0,
+  };
 }
 
 async function fetchBugByName(name) {
