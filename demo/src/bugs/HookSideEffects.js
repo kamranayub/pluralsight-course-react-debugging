@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Box, Text, Tag, Heading } from "grommet";
 import { AddCircle, SubtractCircle } from "grommet-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -47,6 +47,7 @@ function Price({ price, promotion }) {
     return (
       <Box
         gap="small"
+        margin={{ bottom: "medium" }}
         data-test={`promotion: ${promotion.name}`}
         data-discount={promotion.discount}
       >
@@ -68,6 +69,7 @@ function Price({ price, promotion }) {
             {promotion.computedPrice}
           </Text>
         </Box>
+        <SaleTimer expiresInMs={promotion.expiresInMs} />
       </Box>
     );
   }
@@ -77,6 +79,30 @@ function Price({ price, promotion }) {
       {price}
     </Text>
   );
+}
+
+function SaleTimer({ expiresInMs }) {
+  const [saleCountdown, setSaleCountdown] = useState(expiresInMs);
+
+  useEffect(() => {
+    setInterval(() => {
+      setSaleCountdown((countdown) => countdown - 1000);
+    }, 1000);
+  }, []);
+
+  return (
+    <Text color="text-weak" size="small">
+      {formatMillisecondsAsDuration(saleCountdown)} remaining before sale ends
+    </Text>
+  );
+}
+
+function formatMillisecondsAsDuration(milliseconds) {
+  const seconds = Math.floor((milliseconds / 1000) % 60);
+  const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
+  const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
+
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
@@ -126,13 +152,18 @@ function useTrackAnalytics(analyticsEvent, dependencies) {
   const [analyticsEventsSent, setAnalyticsEventsSent] = useState(0);
 
   useEffect(() => {
-    console.log("tracked analytics event", analyticsEvent);
+    if (window.navigator.sendBeacon) {
+      window.navigator.sendBeacon(
+        "/api/analytics.json",
+        JSON.stringify(analyticsEvent)
+      );
+    }
     setAnalyticsEventsSent(analyticsEventsSent + 1);
   }, [analyticsEvent, dependencies, analyticsEventsSent]);
 }
 
 async function fetchBugByName(name) {
-  const res = await fetch(`/api/data.json`);
+  const res = await fetch(`/api/bugs.json`);
   const data = await res.json();
 
   return data.bugs.find((item) => item.name === name);
