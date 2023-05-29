@@ -162,12 +162,12 @@ function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
           icon={<AddCircle />}
         />
       </Box>
-      <AnalyticsTracking quantity={quantity} />
+      <QuantityTracking quantity={quantity} />
     </Box>
   );
 }
 
-function AnalyticsTracking({ quantity }) {
+function QuantityTracking({ quantity }) {
   const { track } = useTrackAnalytics();
 
   useEffect(() => {
