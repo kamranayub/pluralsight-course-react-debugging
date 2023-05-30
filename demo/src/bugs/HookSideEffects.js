@@ -26,7 +26,7 @@ const HuggableHoneybee = () => {
     placeholderData: [],
     queryFn: ({ queryKey: [, { name }] }) => fetchBugByName(name),
     select: (data) => data?.promotion ?? [],
-    onSuccess: () => setFetchCount(count => count + 1)
+    onSuccess: () => setFetchCount((count) => count + 1),
   });
 
   useBugTest("should display quantity picker", ({ findByTestId }) => {
@@ -41,7 +41,7 @@ const HuggableHoneybee = () => {
     <>
       <Heading level={3}>{bug.name}</Heading>
       {isFetched && <Price price={bug.price} promotion={promotion} />}
-      {!isFetching && (
+      {isFetched && (
         <QuantityPicker initialQuantity={1} onQuantityChange={refetch} />
       )}
     </>
@@ -92,9 +92,11 @@ function SaleTimer({ expiresInMs }) {
   const [saleCountdown, setSaleCountdown] = useState(expiresInMs);
 
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       setSaleCountdown((countdown) => countdown - 1000);
     }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -185,7 +187,7 @@ function useTrackAnalytics() {
 
   const track = useCallback((analyticsEvent) => {
     setEventBatch((batch) => [...batch, analyticsEvent]);
-  });
+  }, []);
 
   useEffect(() => {
     if (eventBatch.length > 5) {
