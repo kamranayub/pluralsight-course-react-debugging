@@ -15,11 +15,11 @@ const bugs = [
   passingPropsBug,
   unexpectedStateBug,
   hookSideEffectsBug,
+  strictModeBugs,
   excessiveRenderBug,
   cascadingRenderBug,
   delayedRenderBug,
   longRunningRenderBug,
-  strictModeBugs,
 ];
 
 export default bugs;

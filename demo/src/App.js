@@ -81,4 +81,12 @@ const App = () => (
   </Grommet>
 );
 
+export const ThinApp = ({ children }) => (
+  <Grommet full theme={theme}>
+    <QueryClientProvider client={queryClient}>
+      <BugNet>{children}</BugNet>
+    </QueryClientProvider>
+  </Grommet>
+);
+
 export default App;
