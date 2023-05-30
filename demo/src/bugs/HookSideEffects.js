@@ -122,7 +122,7 @@ function formatMillisecondsAsDuration(milliseconds) {
   const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
   const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
 
-  return `${hours}:${minutes}:${seconds}`;
+  return `${hours}:${minutes}:${seconds}`.replace(/\b(\d)\b/g, "0$1");
 }
 
 function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
