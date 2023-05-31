@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Getting Started with the React Bug Shop Demo
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/kamranayub/pluralsight-course-react-debugging)
+
+The fastest way to jump into the demo experience and solve the challenges is by running in the GitHub Codespace which is a preconfigured development environment with everything you need to follow along with the course.
+
+Alternatively, you can clone the project locally and configure your own local dev environment.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

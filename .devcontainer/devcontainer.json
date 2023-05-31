@@ -1,0 +1,10 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+{
+  "name": "Node.js",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
+  "workspaceFolder": "/demo",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/demo,type=bind,consistency=cached",
+  "forwardPorts": [3000],
+  "postCreateCommand": "npm install"
+}

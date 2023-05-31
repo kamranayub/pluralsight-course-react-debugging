@@ -1,5 +1,7 @@
 # React 18 Debugging Playbook Pluralsight Course
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/kamranayub/pluralsight-course-react-debugging)
+
 This repository is for the Pluralsight course **[React 18 Debugging Playbook]($COURSE_LINK$)**. The license is Apache 2.0.
 
 [![Course overview screenshot]($COURSE_HERO_IMAGE$)]($COURSE_LINK$)
