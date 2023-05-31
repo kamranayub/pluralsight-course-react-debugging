@@ -3,7 +3,7 @@
 {
   "name": "Node.js",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
-  "workspaceFolder": "./demo",
+  "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder}/demo,target=/workspace,type=bind,consistency=cached",
   "forwardPorts": [3000],
   "postCreateCommand": "npm install"
