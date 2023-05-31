@@ -4,7 +4,15 @@
 
 The fastest way to jump into the demo experience and solve the challenges is by running in the GitHub Codespace which is a preconfigured development environment with everything you need to follow along with the course.
 
+Once you're in, simply run:
+
+    npm start
+
+To start the dev server, and Codespaces will prompt you to open a hosted URL in the browser to view the app.
+
 Alternatively, you can clone the project locally and configure your own local dev environment.
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
