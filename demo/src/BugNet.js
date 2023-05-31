@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useDebugValue } from "react";
 
 import { allBugs } from "./all-bugs";
 
 const BugNetContext = React.createContext({});
 
 export function useBugNet() {
-  return React.useContext(BugNetContext);
+  const context = React.useContext(BugNetContext);
+
+  useDebugValue(`${context.count} bugs caught`);
+
+  return context;
 }
 
 export const BugNet = ({ children }) => {
