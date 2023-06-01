@@ -72,7 +72,7 @@ const Popularity = ({ popularity }) => {
   }
 };
 
-const Inventory = ({ inventoryCount = 0 }) => {
+const Inventory = ({ inventoryCount }) => {
   if (inventoryCount === 0) {
     return (
       <Text data-test="inventory" color="red">
