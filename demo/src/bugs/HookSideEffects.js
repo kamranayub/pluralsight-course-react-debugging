@@ -134,7 +134,7 @@ function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
   }, [onQuantityChange, quantity]);
 
   useBugTest("should not send excessive analytics events", () => {
-    expect(eventsSent).to.be.gt(2);
+    expect(eventsSent).to.be.gt(5);
     expect(eventsSent).to.be.lt(100);
   });
 
