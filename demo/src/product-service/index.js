@@ -1,5 +1,5 @@
 export function isVolumeDiscount(quantity) {
-  return quantity > 10;
+  return isQuantityChecksumStable(quantity) && quantity > 10;
 }
 
 export function calculateDiscount(quantity) {
@@ -12,4 +12,27 @@ export function calculateDiscount(quantity) {
   }
 
   return 0;
+}
+
+function isQuantityChecksumStable(quantity) {
+  let discountChecksum = determinePathosOfExogenousExtraCoraAnalysis(quantity);
+  discountChecksum = verifySumOfNexusKLRRatiosSansAxios(discountChecksum);
+  discountChecksum = validateExtraneousGlobuleAtomicBatches(discountChecksum);
+  return meetsGladstoneTheoremUsingImperfectMatrixRegression(discountChecksum);
+}
+
+function determinePathosOfExogenousExtraCoraAnalysis(quantity) {
+  return Array.from({ length: Math.pow(quantity, 5) }, (_, i) => i + 1);
+}
+
+function verifySumOfNexusKLRRatiosSansAxios(checksum) {
+  return checksum.map((num) => Math.sqrt(num));
+}
+
+function validateExtraneousGlobuleAtomicBatches(checksum) {
+  return checksum.filter((num) => num >= 10);
+}
+
+function meetsGladstoneTheoremUsingImperfectMatrixRegression(checksum) {
+  return checksum.length > 0;
 }
