@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo, useRef } from "react";
 import { Button, Heading, Text, Box, ThumbsRating } from "grommet";
 import { AddCircle, SubtractCircle, Favorite } from "grommet-icons";
 
@@ -10,7 +10,7 @@ import "./CascadingRender.css";
 const Bug = () => {
   return (
     <Template bug={bug}>
-      <CuriousCentipede level={1} liked={null} likedBy={[]} />
+      <CuriousCentipede level={1} liked={null} />
     </Template>
   );
 };
@@ -20,36 +20,27 @@ const CuriousCentipede = (props) => {
   const [likeStatus, setLikeStatus] = useState(
     props.liked === null ? null : props.liked ? "like" : "dislike"
   );
-  const [currentlyLikedBy, setCurrentlyLikedBy] = useState(props.likedBy);
-
   const handleOnLevelChange = (level) => {
     setPurchaseLevel(level);
   };
 
   const handleOnLikeChange = (likeState) => {
     setLikeStatus(likeState);
-
-    if (currentlyLikedBy.indexOf("Buglearner Anonymous") < 0) {
-      setCurrentlyLikedBy(["Buglearner Anonymous", ...currentlyLikedBy]);
-    } else {
-      setCurrentlyLikedBy(
-        currentlyLikedBy.filter((by) => by !== "Buglearner Anonymous")
-      );
-    }
   };
+
+  useBugTest("mounts affection badge once per liked", ({ findByTestId }) => {
+    expect(likeStatus).to.equal("like");
+    expect(purchaseLevel).to.be.gte(2);
+    expect(findByTestId("affection")).to.have.attr("data-mounts", "0");
+  });
 
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
-      <LikeButton
-        liked={likeStatus}
-        likedBy={currentlyLikedBy}
-        onLikeChange={handleOnLikeChange}
-      />
+      <LikeButton liked={likeStatus} onLikeChange={handleOnLikeChange} />
       <BugAttributes
         onLevelChange={handleOnLevelChange}
         initialLevel={props.level}
-        isLiked={likeStatus === "like"}
       />
       {purchaseLevel ? (
         <PurchaseSummary
@@ -61,13 +52,13 @@ const CuriousCentipede = (props) => {
   );
 };
 
-const LikeButton = ({ liked, likedBy, onLikeChange }) => {
+const LikeButton = ({ liked, onLikeChange }) => {
   const handleOnChange = (event) => {
     onLikeChange(event.target.value);
   };
 
   return (
-    <Box direction="row">
+    <Box direction="row" gap="small">
       <ThumbsRating
         name="liked"
         data-test="liked"
@@ -75,23 +66,13 @@ const LikeButton = ({ liked, likedBy, onLikeChange }) => {
         value={liked}
         onChange={handleOnChange}
       />
-      <Text margin={{ left: "xsmall" }}>Liked by</Text>
-      {likedBy.map((customer, i) => (
-        <Text
-          color="text-weak"
-          key={customer}
-          data-test={`liked-by: ${customer}`}
-          margin={{ left: "xsmall" }}
-        >
-          {customer}
-          {i !== likedBy.length - 1 ? ", " : null}
-        </Text>
-      ))}
+
+      {liked === "like" ? <AffectionateBadge /> : null}
     </Box>
   );
 };
 
-function BugAttributes({ isLiked, initialLevel, onLevelChange }) {
+function BugAttributes({ initialLevel, onLevelChange }) {
   const [level, setLevel] = useState(initialLevel);
 
   const onLevelUp = () => {
@@ -129,8 +110,6 @@ function BugAttributes({ isLiked, initialLevel, onLevelChange }) {
           disabled={level >= 100}
           icon={<AddCircle />}
         />
-
-        {isLiked ? <AffectionateBadge /> : null}
       </Box>
     </Box>
   );
@@ -156,6 +135,12 @@ function PurchaseSummary({ purchaseLevel, purchaseLikability }) {
 }
 
 function AffectionateBadge() {
+  const mountCounter = useRef(0);
+
+  useEffect(() => {
+    mountCounter.current++;
+  }, []);
+
   const HEART_CLASSES = [
     "heart float1",
     "heart float2",
@@ -182,7 +167,7 @@ function AffectionateBadge() {
 
   return (
     <>
-      <Box>
+      <Box data-test="affection" data-mounts={mountCounter.current}>
         <Favorite color="red" />
         {hearts}
       </Box>
