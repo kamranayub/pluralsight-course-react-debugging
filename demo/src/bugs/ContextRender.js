@@ -1,4 +1,10 @@
-import { createContext, useContext, useCallback, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import {
   Cards,
   Card,
@@ -14,7 +20,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 
 import Template from "./BugPageTemplate";
-import { expect, useBugTest, useBugTestOnce } from "./tests";
+import { expect, useBugTest } from "./tests";
 
 const Bug = () => {
   return (
@@ -24,7 +30,7 @@ const Bug = () => {
   );
 };
 
-const CheerfulCicada = (props) => {
+const CheerfulCicada = () => {
   return (
     <StorePersonalization>
       <Heading level={3}>{bug.name}</Heading>
@@ -75,40 +81,79 @@ function StoreList() {
     queryFn: fetchStores,
   });
 
+  useBugTest(
+    "should not re-render all list items when setting store",
+    ({ findAllByTestId }) => {
+      const stores = findAllByTestId("store");
+      const updateCounts = Array.from(stores).map(
+        (storeEl) => storeEl.dataset.updates
+      );
+      const updateCountsAreSame = updateCounts.every(
+        (c) => c === updateCounts[0]
+      );
+
+      expect(updateCountsAreSame).to.be.false;
+    }
+  );
+
   return (
     <Cards
       data={stores}
       children={(store) => {
         return (
-          <Card background="light-2">
-            <CardHeader pad="small">
-              <Box>
-                <Heading level={4}>{store.storeName}</Heading>
-                <Text size="xsmall" color="text-weak">
-                  {store.location}
-                </Text>
-              </Box>
-            </CardHeader>
-            <CardBody>
-              <StoreMap storeName={store.storeName} location={store.location} />
-            </CardBody>
-            <CardFooter background="light-3" pad="small">
-              {homeStore === store.storeName ? (
-                <Tag value="this is your store" />
-              ) : (
-                <Button
-                  secondary
-                  label="Make this my store"
-                  onClick={() => setUserHomeStore(store.storeName)}
-                />
-              )}
-            </CardFooter>
-          </Card>
+          <StoreListItem
+            key={store.storeName}
+            store={store}
+            homeStore={homeStore}
+            setUserHomeStore={setUserHomeStore}
+          />
         );
       }}
     />
   );
 }
+
+const StoreListItem = function StoreListItem({
+  store,
+  homeStore,
+  setUserHomeStore,
+}) {
+  const updates = useRef(0);
+
+  updates.current++;
+
+  return (
+    <Card
+      key={store.storeName}
+      background="light-2"
+      data-test="store"
+      data-updates={updates.current}
+    >
+      <CardHeader pad="small">
+        <Box>
+          <Heading level={4}>{store.storeName}</Heading>
+          <Text size="xsmall" color="text-weak">
+            {store.location}
+          </Text>
+        </Box>
+      </CardHeader>
+      <CardBody>
+        <StoreMap storeName={store.storeName} location={store.location} />
+      </CardBody>
+      <CardFooter background="light-3" pad="small">
+        {homeStore === store.storeName ? (
+          <Tag value="this is your store" />
+        ) : (
+          <Button
+            secondary
+            label="Make this my store"
+            onClick={() => setUserHomeStore(store.storeName)}
+          />
+        )}
+      </CardFooter>
+    </Card>
+  );
+};
 
 function StoreMap({ storeName, location }) {
   return (

@@ -25,6 +25,8 @@ export function BugTestsProvider({ children }) {
   const testStateRef = useRef({});
   const findByTestId = (id) =>
     containerRef.current.querySelector(`[data-test="${id}"]`);
+  const findAllByTestId = (id) =>
+    containerRef.current.querySelectorAll(`[data-test="${id}"]`);
 
   const contextValue = useMemo(
     () => ({
@@ -37,6 +39,7 @@ export function BugTestsProvider({ children }) {
         };
       },
       findByTestId,
+      findAllByTestId,
     }),
     []
   );
@@ -50,23 +53,23 @@ export function BugTestsProvider({ children }) {
 
 export function useBugTest(label, testFn) {
   const queryClient = useQueryClient();
-  const { findByTestId, reportTest } = useBugTestContext();
+  const { findByTestId, findAllByTestId, reportTest } = useBugTestContext();
 
   useEffect(() => {
     try {
-      testFn({ findByTestId });
+      testFn({ findByTestId, findAllByTestId });
       reportTest(label, true);
     } catch (err) {
       reportTest(label, false);
     }
     queryClient.invalidateQueries({ queryKey: ["test-summary"] });
-  }, [queryClient, reportTest, testFn, findByTestId, label]);
+  }, [queryClient, reportTest, testFn, findByTestId, findAllByTestId, label]);
 
   return null;
 }
 
 export function useBugTestOnce(label, testFn) {
-  const { findByTestId, reportTest } = useBugTestContext();
+  const { findByTestId, findAllByTestId, reportTest } = useBugTestContext();
   const queryClient = useQueryClient();
   const [hasPassedOnce, setHasPassedOnce] = useState(false);
 
@@ -74,14 +77,22 @@ export function useBugTestOnce(label, testFn) {
     if (hasPassedOnce) return;
 
     try {
-      testFn({ findByTestId });
+      testFn({ findByTestId, findAllByTestId });
       reportTest(label, true);
       setHasPassedOnce(true);
     } catch (err) {
       reportTest(label, false);
     }
     queryClient.invalidateQueries({ queryKey: ["test-summary"] });
-  }, [testFn, queryClient, reportTest, findByTestId, label, hasPassedOnce]);
+  }, [
+    testFn,
+    queryClient,
+    reportTest,
+    findByTestId,
+    findAllByTestId,
+    label,
+    hasPassedOnce,
+  ]);
 
   return null;
 }
