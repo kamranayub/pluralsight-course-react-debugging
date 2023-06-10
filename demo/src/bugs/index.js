@@ -4,6 +4,7 @@ import { bug as passingPropsBug } from "./PassingProps";
 import { bug as unexpectedStateBug } from "./UnexpectedState";
 import { bug as hookSideEffectsBug } from "./HookSideEffects";
 import { bug as delayedRenderBug } from "./DelayedRender";
+import { bug as conditionalRenderBug } from "./ConditionalRender";
 import { bug as cascadingRenderBug } from "./CascadingRender";
 import { bug as excessiveRenderBug } from "./ExcessiveRender";
 import { bug as contextRenderBug } from "./ContextRender";
@@ -18,6 +19,7 @@ const bugs = [
   hookSideEffectsBug,
   strictModeBugs,
   delayedRenderBug,
+  conditionalRenderBug,
   cascadingRenderBug,
   excessiveRenderBug,
   contextRenderBug,
