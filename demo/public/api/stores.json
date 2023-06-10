@@ -1,0 +1,32 @@
+[
+  {
+    "storeName": "Sara's Serendipitous Bug Joint",
+    "location": "Seattle, WA",
+    "nearest": false
+  },
+  {
+    "storeName": "Bozeman Bo's Bombastic Bugs",
+    "location": "Bozeman, MT",
+    "nearest": false
+  },
+  {
+    "storeName": "Milk Weed Milwaukee",
+    "location": "Milwaukee, WI",
+    "nearest": false
+  },
+  {
+    "storeName": "Manny's Minnesota Crawler Emporium",
+    "location": "Minneapolis, MN",
+    "nearest": true
+  },
+  {
+    "storeName": "Tanner's Total Bugs",
+    "location": "Bozeman, MT",
+    "nearest": false
+  },
+  {
+    "storeName": "Dodd's Doodles, Doodads, and Doohickies",
+    "location": "Salt Lake City, UT",
+    "nearest": false
+  }
+]

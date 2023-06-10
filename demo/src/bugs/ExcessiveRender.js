@@ -1,18 +1,82 @@
-import { Text } from "grommet";
+import { useEffect, useCallback, useState } from "react";
+import { Button, Box, Text, Tag, Heading } from "grommet";
+import { AddCircle, SubtractCircle } from "grommet-icons";
+import { useQuery } from "@tanstack/react-query";
 
 import Template from "./BugPageTemplate";
+import { expect, useBugTest } from "./tests";
 
 const Bug = () => {
   return (
     <Template bug={bug}>
-      <ShySpider />
+      <ExtravagantEmeraldAshBorer />
     </Template>
   );
 };
 
-const ShySpider = () => {
-  return <Text color="text-xweak">the {bug.name} is hiding...</Text>;
+const ExtravagantEmeraldAshBorer = () => {
+  const { isFetching, refetch } = useQuery({
+    queryKey: ["promotion", { name: bug.name }],
+    placeholderData: [],
+    queryFn: ({ queryKey: [, { name }] }) => fetchBugByName(name),
+    select: (data) => data?.promotion ?? [],
+  });
+
+  useBugTest("should display quantity picker", ({ findByTestId }) => {
+    expect(findByTestId("quantity")).to.exist;
+  });
+
+  return (
+    <>
+      <Heading level={3}>{bug.name}</Heading>
+      {!isFetching && (
+        <QuantityPicker initialQuantity={1} onQuantityChange={refetch} />
+      )}
+    </>
+  );
 };
+
+function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
+  const [quantity, setQuantity] = useState(initialQuantity);
+
+  useEffect(() => {
+    onQuantityChange(quantity);
+  }, [onQuantityChange, quantity]);
+
+  return (
+    <Box data-test="quantity">
+      <Box
+        direction="row"
+        gap="small"
+        align="center"
+        margin={{ bottom: "medium" }}
+      >
+        <Button
+          onClick={() => setQuantity(quantity - 1)}
+          disabled={quantity <= 1}
+          icon={<SubtractCircle />}
+        />
+        <Text color="text-weak" data-test="level">
+          {quantity}
+        </Text>
+
+        <Button
+          primary
+          onClick={() => setQuantity(quantity + 1)}
+          disabled={quantity >= 100}
+          icon={<AddCircle />}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+async function fetchBugByName(name) {
+  const res = await fetch(`/api/bugs.json`);
+  const data = await res.json();
+
+  return data.bugs.find((item) => item.name === name);
+}
 
 export const bug = {
   title: "Excessive Render",

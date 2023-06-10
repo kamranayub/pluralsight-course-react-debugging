@@ -28,7 +28,7 @@ const CuriousCentipede = (props) => {
     setLikeStatus(likeState);
   };
 
-  useBugTest("mounts affection badge once per liked", ({ findByTestId }) => {
+  useBugTest("only animates hearts once per like", ({ findByTestId }) => {
     expect(likeStatus).to.equal("like");
     expect(purchaseLevel).to.be.gte(2);
     expect(findByTestId("affection")).to.have.attr("data-mounts", "0");
@@ -154,7 +154,6 @@ function AffectionateBadge() {
   const hearts = Array.from({ length: numHearts }).map((_, i) => {
     // Randomize delay (0-2 seconds)
     const style = {
-      animationDelay: `${Math.random() * 2}s`,
       animationDuration: `${1 + Math.random() * 1.5}s`,
     };
     const heartClass =
