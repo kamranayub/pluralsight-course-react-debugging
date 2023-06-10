@@ -12,7 +12,6 @@ import {
   Box,
 } from "grommet";
 import { useQuery } from "@tanstack/react-query";
-import { FadeIn } from "react-slide-fade-in";
 
 import Template from "./BugPageTemplate";
 import { expect, useBugTest, useBugTestOnce } from "./tests";
