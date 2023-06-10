@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Box, Button, Heading, Text } from "grommet";
 import { AddCircle, SubtractCircle } from "grommet-icons";
 
-import ProductImageCarousel from "../components/ProductImageCarousel";
 import Template from "./BugPageTemplate";
 import { isVolumeDiscount, calculateDiscount } from "../product-service";
 import { expect, useBugTest } from "./tests";
