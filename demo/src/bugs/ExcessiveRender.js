@@ -1,5 +1,5 @@
-import { useEffect, useCallback, useState } from "react";
-import { Button, Box, Text, Tag, Heading } from "grommet";
+import { useEffect, useState } from "react";
+import { Button, Box, Text, Heading } from "grommet";
 import { AddCircle, SubtractCircle } from "grommet-icons";
 import { useQuery } from "@tanstack/react-query";
 
@@ -26,22 +26,30 @@ const ExtravagantEmeraldAshBorer = () => {
     expect(findByTestId("quantity")).to.exist;
   });
 
+  const handleOnQuantityChange = () => refetch();
+
   return (
     <>
       <Heading level={3}>{bug.name}</Heading>
-      {!isFetching && (
-        <QuantityPicker initialQuantity={1} onQuantityChange={refetch} />
-      )}
+      <QuantityPicker
+        show={!isFetching}
+        initialQuantity={1}
+        onQuantityChange={handleOnQuantityChange}
+      />
     </>
   );
 };
 
-function QuantityPicker({ initialQuantity = 1, onQuantityChange }) {
+function QuantityPicker({ show, initialQuantity = 1, onQuantityChange }) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
   useEffect(() => {
     onQuantityChange(quantity);
   }, [onQuantityChange, quantity]);
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <Box data-test="quantity">

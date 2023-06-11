@@ -9,6 +9,10 @@
         "computedPrice": "$8.09",
         "expiresInMs": 86400000
       }
+    },
+    {
+      "name": "Extravagant Emerald Ash Borer",
+      "price": "$1099.99"
     }
   ]
 }
