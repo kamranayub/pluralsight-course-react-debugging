@@ -1,9 +1,9 @@
-import { useEffect, useState, memo, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button, Heading, Text, Box, ThumbsRating } from "grommet";
 import { AddCircle, SubtractCircle, Favorite } from "grommet-icons";
 
 import Template from "./BugPageTemplate";
-import { expect, useBugTest, useBugTestOnce } from "./tests";
+import { expect, useBugTest } from "./tests";
 
 import "./CascadingRender.css";
 
