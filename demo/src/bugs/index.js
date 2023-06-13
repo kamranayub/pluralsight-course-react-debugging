@@ -8,7 +8,6 @@ import { bug as conditionalRenderBug } from "./ConditionalRender";
 import { bug as cascadingRenderBug } from "./CascadingRender";
 import { bug as excessiveRenderBug } from "./ExcessiveRender";
 import { bug as contextRenderBug } from "./ContextRender";
-import { bug as transitionBug } from "./Transitions";
 import { bug as longRunningRenderBug } from "./LongRunningRender";
 import { bug as strictModeBugs } from "./StrictMode";
 
@@ -24,7 +23,6 @@ const bugs = [
   cascadingRenderBug,
   excessiveRenderBug,
   contextRenderBug,
-  transitionBug,
   longRunningRenderBug,
 ];
 
