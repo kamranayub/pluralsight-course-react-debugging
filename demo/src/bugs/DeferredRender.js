@@ -13,10 +13,11 @@ const Bug = () => {
   );
 };
 
+const EMPTY_UPDATES = [];
+
 const DefiantDamselfly = () => {
   const [deliveryInput, setDeliveryInput] = useState("");
-  const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [deliveryUpdates, setDeliveryUpdates] = useState([]);
+  const [deliveryUpdates, setDeliveryUpdates] = useState(EMPTY_UPDATES);
 
   const suggestions = deliveryInput
     ? SEARCH_SUGGESTIONS.filter((ss) =>
@@ -28,7 +29,7 @@ const DefiantDamselfly = () => {
     "should be able to type 'mosquito' without delay",
     ({ findByTestId }) => {
       expect(deliveryUpdates.length).to.be.gt(5);
-      
+
       const maxUpdateTime = parseFloat(
         findByTestId("duration").dataset.duration
       );
@@ -59,8 +60,12 @@ const DefiantDamselfly = () => {
     setDeliveryInput(e.target.value);
 
     if (e.target.value.length < 2) {
-      setDeliveryUpdates([]);
+      setDeliveryUpdates(EMPTY_UPDATES);
     }
+  }, []);
+
+  const handleOnDeliveryInputBlur = useCallback(() => {
+    () => setDeliveryUpdates(EMPTY_UPDATES);
   }, []);
 
   return (
@@ -74,16 +79,9 @@ const DefiantDamselfly = () => {
           suggestions={suggestions}
           value={deliveryInput}
           onChange={handleOnDeliveryInputChange}
-          onBlur={() => setDeliveryUpdates([])}
-          onSuggestionSelect={(e) => setDeliveryAddress(e.suggestion.value)}
+          onBlur={handleOnDeliveryInputBlur}
         />
       </Profiler>
-      {!deliveryAddress && (
-        <Text color="text-weak">Please enter your delivery address</Text>
-      )}
-      {deliveryAddress && (
-        <Text color="red">Delivering to {deliveryAddress}</Text>
-      )}
     </>
   );
 };
