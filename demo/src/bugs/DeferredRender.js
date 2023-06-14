@@ -27,6 +27,8 @@ const DefiantDamselfly = () => {
   useBugTestOnce(
     "should be able to type 'mosquito' without delay",
     ({ findByTestId }) => {
+      expect(deliveryUpdates.length).to.be.gt(5);
+      
       const maxUpdateTime = parseFloat(
         findByTestId("duration").dataset.duration
       );
