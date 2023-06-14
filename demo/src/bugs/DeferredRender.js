@@ -1,4 +1,4 @@
-import { useCallback, useState, Profiler } from "react";
+import { useCallback, useState, useMemo, Profiler } from "react";
 import { Box, Heading, Text, TextInput } from "grommet";
 import { FormSearch } from "grommet-icons";
 
@@ -14,16 +14,21 @@ const Bug = () => {
 };
 
 const EMPTY_UPDATES = [];
+const SEARCH_ICON = <FormSearch />;
 
 const DefiantDamselfly = () => {
   const [deliveryInput, setDeliveryInput] = useState("");
   const [deliveryUpdates, setDeliveryUpdates] = useState(EMPTY_UPDATES);
 
-  const suggestions = deliveryInput
-    ? SEARCH_SUGGESTIONS.filter((ss) =>
-        ss.value.toLowerCase().includes(deliveryInput.toLowerCase())
-      )
-    : SEARCH_SUGGESTIONS;
+  const suggestions = useMemo(
+    () =>
+      deliveryInput
+        ? SEARCH_SUGGESTIONS.filter((ss) =>
+            ss.value.toLowerCase().includes(deliveryInput.toLowerCase())
+          )
+        : SEARCH_SUGGESTIONS,
+    [deliveryInput]
+  );
 
   useBugTestOnce(
     "should be able to type 'mosquito' without delay",
@@ -65,7 +70,7 @@ const DefiantDamselfly = () => {
   }, []);
 
   const handleOnDeliveryInputBlur = useCallback(() => {
-    () => setDeliveryUpdates(EMPTY_UPDATES);
+    setDeliveryUpdates(EMPTY_UPDATES);
   }, []);
 
   return (
@@ -74,7 +79,7 @@ const DefiantDamselfly = () => {
       <UpdateTimeline updates={deliveryUpdates} />
       <Profiler id={bug.name} onRender={handleProfilerOnRender}>
         <TextInput
-          icon={<FormSearch />}
+          icon={SEARCH_ICON}
           placeholder="enter address"
           suggestions={suggestions}
           value={deliveryInput}
