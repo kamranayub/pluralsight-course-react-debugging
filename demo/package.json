@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.18.0",
+    "@tanstack/react-query-devtools": "^4.29.14",
     "chai": "^4.3.7",
     "chai-dom": "^1.11.0",
     "mocha": "^10.2.0"

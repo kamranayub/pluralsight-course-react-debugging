@@ -1,6 +1,7 @@
 import React from "react";
 import { Anchor, Grommet, Page, PageContent, Footer, Text } from "grommet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import AppHeader from "./components/AppHeader";
 import HomePage from "./Home";
@@ -77,6 +78,7 @@ const App = () => (
           </Page>
         </Router>
       </BugNet>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </Grommet>
 );

@@ -1,4 +1,5 @@
 import React, { useDebugValue } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { allBugs } from "./all-bugs";
 
@@ -13,7 +14,19 @@ export function useBugNet() {
 }
 
 export const BugNet = ({ children }) => {
-  const [bugs, setBugs] = React.useState([]);
+  const queryClient = useQueryClient();
+  const { data: bugs } = useQuery(["bugs"], {
+    initialData: [],
+    queryFn: () => {
+      return queryClient.getQueryData(["bugs"]) || [];
+    }
+  });
+  const { mutate } = useMutation({
+    mutationFn: (bugs) => {
+      queryClient.setQueryData(["bugs"], bugs);
+    },
+  });
+
   const caught = React.useMemo(
     () => bugs.map((name) => allBugs.find((b) => b.name === name)),
     [bugs]
@@ -27,15 +40,18 @@ export const BugNet = ({ children }) => {
         return;
       }
 
-      setBugs([...bugs, bugName]);
+      mutate([...bugs, bugName]);
     },
-    [bugs, hasBug, setBugs]
+    [bugs, hasBug, mutate]
+  );
+
+  const providerValue = React.useMemo(
+    () => ({ caught, catchBug, hasBug, count: caught.length }),
+    [caught, catchBug, hasBug]
   );
 
   return (
-    <BugNetContext.Provider
-      value={{ caught, catchBug, hasBug, count: caught.length }}
-    >
+    <BugNetContext.Provider value={providerValue}>
       {children}
     </BugNetContext.Provider>
   );
