@@ -1,0 +1,21 @@
+diff --git a/demo/src/bugs/ExcessiveRender.js b/demo/src/bugs/ExcessiveRender.js
+index d7908e0..1b7d4a5 100644
+--- a/demo/src/bugs/ExcessiveRender.js
++++ b/demo/src/bugs/ExcessiveRender.js
+@@ -26,15 +26,13 @@ const ExtravagantEmeraldAshBorer = () => {
+     expect(findByTestId("quantity")).to.exist;
+   });
+ 
+-  const handleOnQuantityChange = () => refetch();
+-
+   return (
+     <>
+       <Heading level={3}>{bug.name}</Heading>
+       <QuantityPicker
+         show={!isFetching}
+         initialQuantity={1}
+-        onQuantityChange={handleOnQuantityChange}
++        onQuantityChange={refetch}
+       />
+     </>
+   );

@@ -1,0 +1,26 @@
+diff --git a/demo/src/bugs/ConditionalRender.js b/demo/src/bugs/ConditionalRender.js
+index 4a8edb8..54cad7f 100644
+--- a/demo/src/bugs/ConditionalRender.js
++++ b/demo/src/bugs/ConditionalRender.js
+@@ -76,9 +76,7 @@ function QuantityPicker({ initialQuantity = 1, price, onQuantityChange }) {
+         />
+       </Box>
+ 
+-      {isVolumeDiscount(quantity) ? (
+-        <VolumeDiscount price={price} quantity={quantity} />
+-      ) : null}
++      <VolumeDiscount price={price} quantity={quantity} />
+     </Box>
+   );
+ }
+@@ -87,6 +85,10 @@ function VolumeDiscount({ price, quantity }) {
+   const discount = calculateDiscount(quantity);
+   const savings = formatAsCurrency(parseCurrencyAsAmount(price) * discount);
+ 
++  if (discount <= 0) {
++    return null;
++  }
++
+   return (
+     <Text data-test="discount" color="text-ok">
+       Volume discount applies: {discount * 100}% (save {savings}!)

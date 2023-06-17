@@ -1,0 +1,51 @@
+diff --git a/demo/src/bugs/ContextRender.js b/demo/src/bugs/ContextRender.js
+index 04eaba8..f934960 100644
+--- a/demo/src/bugs/ContextRender.js
++++ b/demo/src/bugs/ContextRender.js
+@@ -4,6 +4,7 @@ import {
+   useCallback,
+   useRef,
+   useState,
++  memo
+ } from "react";
+ import {
+   Cards,
+@@ -104,7 +105,7 @@ function StoreList() {
+           <StoreListItem
+             key={store.storeName}
+             store={store}
+-            homeStore={homeStore}
++            isHomeStore={homeStore === store.storeName}
+             setUserHomeStore={setUserHomeStore}
+           />
+         );
+@@ -113,9 +114,9 @@ function StoreList() {
+   );
+ }
+ 
+-const StoreListItem = function StoreListItem({
++const StoreListItem = memo(function StoreListItem({
+   store,
+-  homeStore,
++  isHomeStore,
+   setUserHomeStore,
+ }) {
+   const updates = useRef(0);
+@@ -141,7 +142,7 @@ const StoreListItem = function StoreListItem({
+         <StoreMap storeName={store.storeName} location={store.location} />
+       </CardBody>
+       <CardFooter background="light-3" pad="small">
+-        {homeStore === store.storeName ? (
++        {isHomeStore ? (
+           <Tag value="this is your store" />
+         ) : (
+           <Button
+@@ -153,7 +154,7 @@ const StoreListItem = function StoreListItem({
+       </CardFooter>
+     </Card>
+   );
+-};
++});
+ 
+ function StoreMap({ storeName, location }) {
+   return (

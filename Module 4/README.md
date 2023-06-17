@@ -10,7 +10,7 @@ Here are links to resources and possible solution patch files for this module.
 
 ### Clip 3: Debug Helpers $r and useDebugValue
 
-- [See `demo/src/BugNet.js` for useDebugValue usage](https://github.com/kamranayub/pluralsight-course-react-debugging/blob/v2023.06.17/demo/src/BugNet.js#L11)
+- [See `demo/src/BugNet.js` for useDebugValue usage](../demo/src/BugNet.js#L11)
 
 ### Clip 4: Debugging Unexpected Prop Values
 
