@@ -12,6 +12,12 @@ To start the dev server, and Codespaces will prompt you to open a hosted URL in 
 
 Alternatively, you can clone the project locally and configure your own local dev environment.
 
+## Solving the Challenges
+
+The goal is to catch all the bugs in the shop. Each bug comes with a set of checks you need to make pass. You'll need to refactor and update the code.
+
+The videos in the course provide the solutions to each challenge but there are often multiple ways to solve a problem with React. If you're stuck, reference the videos or explore on your own!
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

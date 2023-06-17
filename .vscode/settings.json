@@ -2,9 +2,9 @@
   "editor.minimap.enabled": false,
   "workbench.statusBar.visible": false,
   "workbench.statusBar.feedback.visible": false,
-  "workbench.colorTheme": "Default Light+",
+  "workbench.colorTheme": "Default Dark+",
   "workbench.tips.enabled": false,
   "git.countBadge": "off",
   "git.decorations.enabled": false,
-  "window.zoomLevel": 1
+  "window.zoomLevel": 0
 }
