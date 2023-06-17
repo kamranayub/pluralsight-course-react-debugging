@@ -1,0 +1,44 @@
+diff --git a/demo/src/bugs/UnexpectedPropTypes.js b/demo/src/bugs/UnexpectedPropTypes.js
+index 3838f4c..5439c67 100644
+--- a/demo/src/bugs/UnexpectedPropTypes.js
++++ b/demo/src/bugs/UnexpectedPropTypes.js
+@@ -14,10 +14,10 @@ const Bug = () => {
+   return (
+     <Template bug={bug}>
+       <UnseenUmbrellaMoth
+-        rating={0}
++        rating={3.5}
+         reviewCount={35}
+-        inventoryCount={null}
+-        popularity="trending"
++        inventoryCount={10}
++        popularity={POPULARITY.trending}
+       />
+     </Template>
+   );
+@@ -43,12 +43,14 @@ const UnseenUmbrellaMoth = ({ inventoryCount, rating, reviewCount, popularity })
+     expect(findByTestId("inventory")).to.have.text("In Stock");
+   });
+ 
++  const safeInventoryCount = inventoryCount ?? 0;
++
+   return (
+     <>
+       <Heading level={3}>{bug.name}</Heading>
+       <Popularity popularity={popularity} />
+-      <Inventory inventoryCount={inventoryCount} />
+-      {rating && <Rating rating={rating} reviewCount={reviewCount} />}
++      <Inventory inventoryCount={safeInventoryCount} />
++      {rating ? <Rating rating={rating} reviewCount={reviewCount} /> : null}
+     </>
+   );
+ };
+@@ -72,7 +74,7 @@ const Popularity = ({ popularity }) => {
+   }
+ };
+ 
+-const Inventory = ({ inventoryCount }) => {
++const Inventory = ({ inventoryCount = 0 }) => {
+   if (inventoryCount === 0) {
+     return (
+       <Text data-test="inventory" color="red">

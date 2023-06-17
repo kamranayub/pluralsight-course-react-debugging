@@ -1,0 +1,41 @@
+diff --git a/demo/src/bugs/PassingProps.js b/demo/src/bugs/PassingProps.js
+index 3d157c8..23bf29e 100644
+--- a/demo/src/bugs/PassingProps.js
++++ b/demo/src/bugs/PassingProps.js
+@@ -9,7 +9,7 @@ const Bug = () => {
+   const initialState = {
+     liked: null,
+     likedBy: ["Bugcatcher Laura", "Grubeater Kelly"],
+-    level: null,
++    level: 1,
+   };
+ 
+   return (
+@@ -74,17 +74,17 @@ const PilferingPillbug = (props) => {
+     <>
+       <Heading level={3}>{bug.name}</Heading>
+       <LikeButton
++        {...props}
+         liked={likeStatus}
+         likedBy={currentlyLikedBy}
+         onLikeChange={handleOnLikeChange}
+-        {...props}
+       />
+       <BugAttributes
+         onLevelChange={handleOnLevelChange}
+         level={purchaseLevel}
+       />
+       {purchaseLevel ? (
+-        <PurchaseSummary level={purchaseLevel} liked={likeStatus} />
++        <PurchaseSummary purchaseLevel={purchaseLevel} purchaseLikability={likeStatus} />
+       ) : null}
+     </>
+   );
+@@ -183,7 +183,6 @@ function PurchaseSummary({ purchaseLevel, purchaseLikability, ...props }) {
+         data-test="purchaseSummaryHeading"
+         level={3}
+         margin={{ top: "medium" }}
+-        {...props}
+       >
+         summary
+       </Heading>

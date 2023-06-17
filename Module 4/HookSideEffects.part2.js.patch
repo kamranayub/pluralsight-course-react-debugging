@@ -1,0 +1,13 @@
+diff --git a/demo/src/bugs/HookSideEffects.js b/demo/src/bugs/HookSideEffects.js
+index 35e2e70..8a73582 100644
+--- a/demo/src/bugs/HookSideEffects.js
++++ b/demo/src/bugs/HookSideEffects.js
+@@ -184,7 +184,7 @@ function useTrackAnalytics() {
+ 
+   const track = useCallback((analyticsEvent) => {
+     setEventBatch((batch) => [...batch, analyticsEvent]);
+-  });
++  }, []);
+ 
+   useEffect(() => {
+     if (eventBatch.length > 5) {

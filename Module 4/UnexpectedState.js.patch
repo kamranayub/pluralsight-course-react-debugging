@@ -1,0 +1,36 @@
+diff --git a/demo/src/bugs/UnexpectedState.js b/demo/src/bugs/UnexpectedState.js
+index 3587032..727a6a0 100644
+--- a/demo/src/bugs/UnexpectedState.js
++++ b/demo/src/bugs/UnexpectedState.js
+@@ -8,7 +8,7 @@ import { expect, useBugTest } from "./tests";
+ const Bug = () => {
+   return (
+     <Template bug={bug}>
+-      <ShySpider />
++      <ShySpider level={1} />
+     </Template>
+   );
+ };
+@@ -49,15 +49,17 @@ const ShySpider = (props) => {
+ };
+ 
+ function BugAttributes({ initialLevel, onLevelChange }) {
+-  let currentLevel = useState(initialLevel);
++  const [currentLevel, setCurrentLevel] = useState(initialLevel);
+ 
+   const onLevelUp = () => {
+-    currentLevel += 1;
+-    onLevelChange(currentLevel);
++    const newLevel = currentLevel + 1;
++    setCurrentLevel(newLevel);
++    onLevelChange(newLevel);
+   };
+   const onLevelDown = () => {
+-    currentLevel -= 1;
+-    onLevelChange(currentLevel);
++    const newLevel = currentLevel - 1;
++    setCurrentLevel(newLevel);
++    onLevelChange(newLevel);
+   };
+ 
+   return (

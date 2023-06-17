@@ -1,0 +1,68 @@
+diff --git a/demo/src/bugs/ChangingProps.js b/demo/src/bugs/ChangingProps.js
+index 6092563..a360604 100644
+--- a/demo/src/bugs/ChangingProps.js
++++ b/demo/src/bugs/ChangingProps.js
+@@ -1,4 +1,4 @@
+-import { useEffect, useState } from "react";
++import { useEffect, useState, useMemo } from "react";
+ import {
+   Button,
+   Heading,
+@@ -50,13 +50,15 @@ const CrimsonCaterpillar = ({ attributes }) => {
+ };
+ 
+ const LikeButton = ({ liked }) => {
+-  let likeValue = liked === null ? null : liked ? "like" : "dislike";
++  const [likeValue, setLikeValue] = useState(
++    liked === null ? null : liked ? "like" : "dislike"
++  );
+   const handleOnChange = (event) => {
+     const isLiked = event.target.value === "like";
+     if (isLiked) {
+-      likeValue = "like";
++      setLikeValue("like");
+     } else {
+-      likeValue = "dislike";
++      setLikeValue("dislike");
+     }
+   };
+ 
+@@ -79,18 +81,23 @@ const LikeButton = ({ liked }) => {
+ 
+ function BugAttributes({ attributes }) {
+   const [level, setLevel] = useState(1);
++  const leveledAttributes = useMemo(() => {
++    const newAttributes = { ...attributes };
++    Object.entries(attributes).forEach(([key, value]) => {
++      if (typeof value === "number") {
++        newAttributes[key] = value + (level - 1) * 2;
++      }
++    });
++
++    return newAttributes;
++  }, [attributes, level]);
++
+   const onLevelUp = () => setLevel(level + 1);
+   const onLevelDown = () => setLevel(level - 1);
+ 
+   const [hasLeveledUp, setHasLeveledUp] = useState(false);
+   const [hasLeveledDown, setHasLeveledDown] = useState(false);
+ 
+-  Object.entries(attributes).forEach(([key, value]) => {
+-    if (typeof value === "number") {
+-      attributes[key] = value + (level - 1) * 2;
+-    }
+-  });
+-
+   useEffect(() => {
+     if (level > 1) {
+       setHasLeveledUp(true);
+@@ -136,7 +143,7 @@ function BugAttributes({ attributes }) {
+         />
+       </Box>
+       <NameValueList>
+-        {Object.entries(attributes).map(([key, value]) => (
++        {Object.entries(leveledAttributes).map(([key, value]) => (
+           <NameValuePair key={key} name={key}>
+             <Text color="text-strong" data-test={`attribute: ${key}`}>
+               {typeof value === "object" ? value.join(", ") : value}

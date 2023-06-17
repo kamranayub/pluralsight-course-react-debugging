@@ -1,0 +1,17 @@
+diff --git a/demo/src/bugs/HookSideEffects.js b/demo/src/bugs/HookSideEffects.js
+index 8a73582..ce81a4c 100644
+--- a/demo/src/bugs/HookSideEffects.js
++++ b/demo/src/bugs/HookSideEffects.js
+@@ -91,9 +91,11 @@ function SaleTimer({ expiresInMs }) {
+   const [saleCountdown, setSaleCountdown] = useState(expiresInMs);
+ 
+   useEffect(() => {
+-    setInterval(() => {
++    const timerId = setInterval(() => {
+       setSaleCountdown((countdown) => countdown - 1000);
+     }, 1000);
++
++    return () => clearInterval(timerId);
+   }, []);
+ 
+   useEffect(() => {
