@@ -7,3 +7,8 @@
 
 ## Clip 2: Debugging Updates with useTransition
 
+- [View `LongRunningRender.js` potential solution patch diff](LongRunningRender.js.patch)
+
+## Clip 3: Debugging Updates with useDeferredValue
+
+- [View `DeferredRender.js` potential solution patch diff](DeferredRender.js.patch)

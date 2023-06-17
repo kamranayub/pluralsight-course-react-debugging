@@ -1,0 +1,27 @@
+diff --git a/demo/src/bugs/LongRunningRender.js b/demo/src/bugs/LongRunningRender.js
+index 330a0cb..33a29b2 100644
+--- a/demo/src/bugs/LongRunningRender.js
++++ b/demo/src/bugs/LongRunningRender.js
+@@ -1,4 +1,4 @@
+-import { useCallback, useEffect, useState, memo } from "react";
++import { useCallback, useEffect, useState, useTransition, memo } from "react";
+ import { Box, Button, Heading, Text } from "grommet";
+ 
+ import Template from "./BugPageTemplate";
+@@ -15,12 +15,15 @@ const Bug = () => {
+ const LovableLadybug = () => {
+   const [tabIndex, setTabIndex] = useState(0);
+   const [canCatch, setCanCatch] = useState(false);
++  const [, startTransition] = useTransition();
+ 
+   function onTabChange(tabIndex) {
+     if (tabIndex === 1) {
+       setCanCatch(true);
+     }
+-    setTabIndex(tabIndex);
++    startTransition(() => {
++      setTabIndex(tabIndex);
++    });
+   }
+ 
+   const onReviewsRender = useCallback(() => {
