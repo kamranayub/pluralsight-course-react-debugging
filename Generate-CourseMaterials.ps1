@@ -9,17 +9,22 @@ $CommonPaths = @(
 )
 
 Compress-Archive -DestinationPath .\.materials\Module-2.zip -Update -Path ($CommonPaths + @(
-    ".\Module 2"
-))
-Compress-Archive -DestinationPath .\.materials\Module-3.zip -Update -Path ($CommonPaths + @(
-    ".\Module 3"
+    ".\Module 2",
+    ".\demo"
 ))
 Compress-Archive -DestinationPath .\.materials\Module-4.zip -Update -Path ($CommonPaths + @(
-    ".\Module 4"
+    ".\Module 4",
+    ".\demo"
+))
+Compress-Archive -DestinationPath .\.materials\Module-4.zip -Update -Path ($CommonPaths + @(
+    ".\Module 5",
+    ".\demo"
 ))
 Compress-Archive -DestinationPath .\.materials\Module-6.zip -Update -Path ($CommonPaths + @(
-    ".\Module 6"
+    ".\Module 6",
+    ".\demo"
 ))
 Compress-Archive -DestinationPath .\.materials\Module-7.zip -Update -Path ($CommonPaths + @(
-    ".\Module 7"
+    ".\Module 7",
+    ".\demo"
 ))
