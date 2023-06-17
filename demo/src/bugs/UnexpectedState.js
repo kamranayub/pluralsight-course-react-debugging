@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, Button, Heading, Text } from "grommet";
 import { AddCircle, SubtractCircle } from "grommet-icons";
 
 import Template from "./BugPageTemplate";
-import { useBugTest } from "./tests";
+import { expect, useBugTest } from "./tests";
 
 const Bug = () => {
   return (
