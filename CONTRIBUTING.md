@@ -2,11 +2,15 @@
 
 ## Updating Course Materials
 
-### Regenerating Materials
+### Releasing a Course Update
 
-Run `.\Generate-CourseMaterials.ps1` in PowerShell.
+1. Make the required changes
+1. Update README changelog
+1. Run `.\Generate-CourseMaterials.ps1` in PowerShell.
+1. Tag new release in GitHub
+1. Add generated `.zip` files in `.materials` folder to GitHub release
 
-### Providing `.patch` diff files
+## Updating `.patch` diff files
 
 1. Solve the challenge by updating `demo` files
 1. Ensure that file is the only change, unstaged in Git
