@@ -71,7 +71,15 @@ const App = () => (
                   <Anchor href="https://bit.ly/PSReactDebugging">
                     React Debugging Playbook
                   </Anchor>{" "}
-                  Pluralsight course
+                  Pluralsight course.
+                  solve the challenges{" "}
+                  <Anchor href="https://codespaces.new/kamranayub/pluralsight-course-react-debugging">
+                    on your own
+                  </Anchor>
+                  using Codespaces or view source on{" "}
+                  <Anchor href="https://github.com/kamranayub/pluralsight-course-react-debugging">
+                    GitHub
+                  </Anchor>
                 </Text>
               </Footer>
             </PageContent>
