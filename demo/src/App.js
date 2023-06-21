@@ -75,7 +75,7 @@ const App = () => (
                   solve the challenges{" "}
                   <Anchor href="https://codespaces.new/kamranayub/pluralsight-course-react-debugging">
                     on your own
-                  </Anchor>
+                  </Anchor>{" "}
                   using Codespaces or view source on{" "}
                   <Anchor href="https://github.com/kamranayub/pluralsight-course-react-debugging">
                     GitHub
