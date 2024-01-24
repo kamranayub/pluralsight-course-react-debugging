@@ -4,7 +4,7 @@
 
 This repository is for the Pluralsight course **[React 18 Debugging Playbook](https://bit.ly/PSReactDebugging)**. The license is Apache 2.0.
 
-<!-- [![Course overview screenshot]($COURSE_HERO_IMAGE$)](https://bit.ly/PSReactDebugging) -->
+[![Course overview screenshot](https://github.com/kamranayub/pluralsight-course-react-debugging/assets/563819/a2d2e978-807d-431c-97c2-ac5a28b49990)](https://bit.ly/PSReactDebugging)
 
 ## About the Course
 
